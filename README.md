@@ -1,6 +1,8 @@
 # SimpleDJ
 A simple DJ Application created to familiarize ourselves with the capabilities of the Web-Audio-API.
+Current main-branch Deployment:
 
+## https://simple-dj.herokuapp.com/
 ## Development
 1. Install the node version manager nvm: https://github.com/nvm-sh/nvm#installing-and-updating
 2. Install the newest node 16 release: 
