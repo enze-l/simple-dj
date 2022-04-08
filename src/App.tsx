@@ -19,14 +19,10 @@ function App() {
     }, [file])
 
     const handleFile = (e: any) => {
-        stopCurrent();
-        setFile(e.target.files[0]);
-    }
-
-    const stopCurrent = () => {
         if(audioElement){
             audioElement.pause();
         }
+        setFile(e.target.files[0]);
     }
 
     const handlePlayPause = () => {
