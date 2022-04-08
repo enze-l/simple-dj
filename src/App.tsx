@@ -4,34 +4,47 @@ import logo from './logo.svg';
 function App() {
     const [file, setFile] = useState();
 
-    let audioContext: AudioContext;
-    let audioElement: HTMLAudioElement | null;
+    const audioContext = new AudioContext;
+    var audioElement: HTMLAudioElement;
+    var track;
 
     useEffect(() => {
-        if (!audioContext) {
-            audioContext = new window.AudioContext;
-            console.log(file)
-        }
         if (file) {
             audioElement = new Audio(URL.createObjectURL(file));
-            if (audioElement) {
-                const track = audioContext.createMediaElementSource(audioElement);
-                track.connect(audioContext.destination);
-                audioContext.resume();
-                audioElement.play();
-            }
+            track = audioContext.createMediaElementSource(audioElement);
+            track.connect(audioContext.destination);
+            audioContext.resume();
+            audioElement.play();
         }
     }, [file])
 
-    const handeFile = (e: any) => {
+    const handleFile = (e: any) => {
+        stopCurrent();
         setFile(e.target.files[0]);
     }
 
+    const stopCurrent = () => {
+        if(audioElement){
+            audioElement.pause();
+        }
+    }
+
+    const handlePlayPause = () => {
+        if(audioElement) {
+            if (audioElement.paused) {
+                audioElement.play();
+            } else {
+                audioElement.pause();
+            }
+        }
+    }
+
     return (
-        <div className="App">
-            <header className="grid place-items-center h-screen">
-                <input onChange={handeFile} id="audio" type="file" accept="audio/*"/>
-            </header>
+        <div className="grid place-items-center h-screen">
+            <div className="grid grid-cols-1">
+                <button onClick={handlePlayPause}>Play/Pause</button>
+                <input onChange={handleFile} id="audio" type="file" accept="audio/*"/>
+            </div>
         </div>
     );
 }
