@@ -1,13 +1,13 @@
 import React, {useState, useEffect, useRef} from 'react';
+import IconButton from "@mui/material/IconButton";
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
 
 function App() {
     const [file, setFile] = useState();
-    const [buttonText, setButtonText] = useState("Play")
+    const [playButton, setPlayButton] = useState(<PlayArrowIcon/>);
 
-    const PLAY = "Play";
-    const PAUSE = "Pause";
-
-    const audioElement = useRef<HTMLAudioElement>(new Audio());
+    const audioElement = useRef<HTMLAudioElement>();
 
     useEffect(() => {
         if (file) {
@@ -16,32 +16,41 @@ function App() {
             const track = audioContext.createMediaElementSource(audioElement.current);
             track.connect(audioContext.destination);
             audioContext.resume();
-            audioElement.current.play();
+            playSong();
         }
     }, [file])
 
     const handleFileUpload = (e: any) => {
-        if(e.target.files[0]) {
-            audioElement.current.pause();
-            setButtonText(PAUSE)
+        if (e.target.files[0]) {
+            pauseSong();
             setFile(e.target.files[0]);
         }
     }
 
-    const handlePlayPause = () => {
-        if (audioElement.current.paused){
+    const playSong = () => {
+        if (audioElement.current) {
             audioElement.current.play();
-            setButtonText(PAUSE);
-        } else {
+            setPlayButton(<PauseIcon/>);
+        }
+    }
+
+    const pauseSong = () => {
+        if (audioElement.current) {
             audioElement.current.pause();
-            setButtonText(PLAY);
+            setPlayButton(<PlayArrowIcon/>)
+        }
+    }
+
+    const handlePlayPause = () => {
+        if (audioElement.current) {
+            audioElement.current.paused ? playSong() : pauseSong()
         }
     }
 
     return (
         <div className="grid place-items-center h-screen">
             <div className="grid grid-cols-1">
-                <button onClick={handlePlayPause}>{buttonText}</button>
+                <IconButton onClick={handlePlayPause}>{playButton}</IconButton>
                 <input onChange={handleFileUpload} id="audio" type="file" accept="audio/*"/>
             </div>
         </div>
