@@ -17,6 +17,16 @@ Current main-branch Deployment:
     ```
     nvm use default
     ```
+5. Clone this repository
+6. Go to the download Location
+7. Install the dpendencies
+   ```
+   npm install
+   ```
+8. Execute Project
+   ```
+   npm start
+   ```
 
 ### Available Scripts
 
