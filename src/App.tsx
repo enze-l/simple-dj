@@ -49,9 +49,9 @@ function App() {
 
     return (
         <div className="grid place-items-center h-screen">
-            <div className="grid grid-cols-1">
-                <IconButton onClick={handlePlayPause}>{playButton}</IconButton>
+            <div>
                 <input onChange={handleFileUpload} id="audio" type="file" accept="audio/*"/>
+                <IconButton onClick={handlePlayPause}>{file !== undefined && playButton}</IconButton>
             </div>
         </div>
     );
