@@ -11,7 +11,7 @@ type AudioPlayerProps = {
 
 function AudioPlayer(props: AudioPlayerProps) {
     const [playButton, setPlayButton] = useState(<DoNotTouch/>);
-    const file = props.file;
+    const { file, audioContext } = props;
     let audioElement = useRef<HTMLAudioElement>();
 
     useEffect(() => {
@@ -19,9 +19,9 @@ function AudioPlayer(props: AudioPlayerProps) {
         if (file) {
             pauseSong();
             audioElement.current = new Audio(URL.createObjectURL(file));
-            const track = props.audioContext.createMediaElementSource(audioElement.current);
-            track.connect(props.audioContext.destination);
-            props.audioContext.resume().then();
+            const track = audioContext.createMediaElementSource(audioElement.current);
+            track.connect(audioContext.destination);
+            audioContext.resume().then();
             playSong();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
