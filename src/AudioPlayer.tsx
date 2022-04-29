@@ -7,11 +7,14 @@ import { DoNotTouch } from '@mui/icons-material';
 export interface AudioPlayerProps {
     audioContext: AudioContext;
     file: File | undefined;
+    handleSongEnd: any;
 }
 
 function AudioPlayer(props: AudioPlayerProps) {
   const [playButton, setPlayButton] = useState(<DoNotTouch />);
-  const { file, audioContext } = props;
+  const {
+    file, audioContext, handleSongEnd,
+  } = props;
   const audioElement = useRef<HTMLAudioElement>();
 
   const playSong = () => {
@@ -38,10 +41,21 @@ function AudioPlayer(props: AudioPlayerProps) {
     }
   };
 
+  const stopSong = () => {
+    setPlayButton(<DoNotTouch />);
+    audioElement.current = undefined;
+    handleSongEnd();
+  };
+
   useEffect(() => {
     if (file) {
       pauseSong();
       audioElement.current = new Audio(URL.createObjectURL(file));
+      if (audioElement.current) {
+        audioElement.current.onended = () => {
+          stopSong();
+        };
+      }
       const track = audioContext.createMediaElementSource(audioElement.current);
       track.connect(audioContext.destination);
       audioContext.resume().then();
@@ -50,7 +64,7 @@ function AudioPlayer(props: AudioPlayerProps) {
   }, [file]);
 
   return (
-    <div className="flex flex-row items-center">
+    <div className="flex flex-col items-center">
       <p>{file?.name}</p>
       <IconButton className="" onClick={handlePlayPause}>{audioElement !== undefined && playButton}</IconButton>
     </div>

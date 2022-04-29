@@ -1,22 +1,59 @@
 import React, { useState } from 'react';
 import AudioPlayer from './AudioPlayer';
+import Song from './Song';
 
 function App() {
-  const [file, setFile] = useState();
+  const [files, setFiles] = useState<Array<File | undefined>>([undefined]);
+  const [playerFileOne, setPlayerFileOne] = useState<File>();
+  const [playerFileTwo, setPlayerFileTwo] = useState<File>();
   const audioContext = new AudioContext();
-  const audioPlayer1 = AudioPlayer({ audioContext, file });
+  function handlePlayerOneSongEnd() { setPlayerFileOne(undefined); }
+  function handlePlayerTwoSongEnd() { setPlayerFileTwo(undefined); }
 
   const handleFileUpload = (e: any) => {
     if (e.target.files[0]) {
-      setFile(e.target.files[0]);
+      const newArray = [...files];
+      newArray.push(e.target.files[0]);
+      setFiles(newArray);
+    }
+  };
+
+  const handleSongItemClicked = (index: number) => {
+    const file = files[index];
+    if (file) {
+      if (!playerFileOne) {
+        setPlayerFileOne(file);
+      } else if (!playerFileTwo) {
+        setPlayerFileTwo(file);
+      }
     }
   };
 
   return (
-    <div className="grid place-items-center h-screen">
-      <div className="flex-col">
+    <div className="flex">
+      <div className="grow">
+        <div className="grid grid-cols-2 place-items-center h-screen">
+          <AudioPlayer
+            audioContext={audioContext}
+            file={playerFileOne}
+            handleSongEnd={() => handlePlayerOneSongEnd()}
+          />
+          <AudioPlayer
+            audioContext={audioContext}
+            file={playerFileTwo}
+            handleSongEnd={() => handlePlayerTwoSongEnd()}
+          />
+        </div>
+      </div>
+      <div className="grow-0 w-30">
         <input onChange={handleFileUpload} id="audio" type="file" accept="audio/*" />
-        {audioPlayer1}
+        <ul>
+          {files.map((file, index) => (
+            <div onKeyDown={() => handleSongItemClicked(index)} role="button" tabIndex={index} onClick={() => handleSongItemClicked(index)}>
+              <Song file={file} />
+            </div>
+          ))}
+        </ul>
       </div>
     </div>
   );
