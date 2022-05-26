@@ -1,3 +1,4 @@
+import { Slider } from '@mui/material';
 import React, { useState } from 'react';
 import AudioPlayer from './AudioPlayer';
 import Song from './Song';
@@ -6,6 +7,7 @@ function App() {
   const [files, setFiles] = useState<Array<File | undefined>>([undefined]);
   const [playerFileOne, setPlayerFileOne] = useState<File>();
   const [playerFileTwo, setPlayerFileTwo] = useState<File>();
+  const [volume, setVolume] = useState(50);
   const audioContext = new AudioContext();
   function handlePlayerOneSongEnd() { setPlayerFileOne(undefined); }
   function handlePlayerTwoSongEnd() { setPlayerFileTwo(undefined); }
@@ -42,6 +44,19 @@ function App() {
             audioContext={audioContext}
             file={playerFileTwo}
             handleSongEnd={() => handlePlayerTwoSongEnd()}
+          />
+          <Slider
+            value={volume}
+            min={1}
+            max={100}
+            marks={[{ value: 50 }]}
+            track={false}
+            className="col-span-2"
+            onChange={(e, value) => {
+              if (typeof value === 'number') {
+                setVolume(value);
+              }
+            }}
           />
         </div>
       </div>

@@ -1,8 +1,6 @@
 import IconButton from '@mui/material/IconButton';
 import React, { useEffect, useRef, useState } from 'react';
-import PauseIcon from '@mui/icons-material/Pause';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import { DoNotTouch } from '@mui/icons-material';
+import { Pause, PlayArrow, DoNotTouch } from '@mui/icons-material/';
 
 export interface AudioPlayerProps {
     audioContext: AudioContext;
@@ -20,14 +18,14 @@ function AudioPlayer(props: AudioPlayerProps) {
   const playSong = () => {
     if (audioElement.current) {
       audioElement.current.play();
-      setPlayButton(<PauseIcon />);
+      setPlayButton(<Pause />);
     }
   };
 
   const pauseSong = () => {
     if (audioElement.current) {
       audioElement.current.pause();
-      setPlayButton(<PlayArrowIcon />);
+      setPlayButton(<PlayArrow />);
     }
   };
 
