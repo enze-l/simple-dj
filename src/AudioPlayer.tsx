@@ -17,6 +17,7 @@ function AudioPlayer(props: AudioPlayerProps) {
   } = props;
   const audioElement = useRef<HTMLAudioElement>();
   const gainNode = useRef<GainNode>();
+  const [lowBand, setLowBand] = useState(1);
 
   const playSong = () => {
     if (audioElement.current) {
@@ -71,19 +72,33 @@ function AudioPlayer(props: AudioPlayerProps) {
     }
   }, [file]);
 
-  return (
-    <div>
-      <div className="flex flex-col items-center">
-        <p>{file?.name}</p>
-        <IconButton onClick={handlePlayPause}>{file && playButton}</IconButton>
+  if (file) {
+    return (
+      <div>
+        <div className="flex flex-col items-center">
+          <p>{file?.name}</p>
+          <IconButton onClick={handlePlayPause}>{file && playButton}</IconButton>
+        </div>
+        <div className="flex justify-center h-40">
+          <Slider
+            value={lowBand}
+            onChange={(e, value) => {
+              if (typeof value === 'number') { setLowBand(value); }
+            }}
+            min={0}
+            max={2}
+            step={0.01}
+            marks={[{ value: 1 }]}
+            orientation="vertical"
+          />
+          <Slider value={1} min={0} max={2} step={0.01} marks={[{ value: 1 }]} orientation="vertical" />
+          <Slider value={1} min={0} max={2} step={0.01} marks={[{ value: 1 }]} orientation="vertical" />
+        </div>
       </div>
-      <div className="flex justify-center h-40">
-        <Slider orientation="vertical" />
-        <Slider orientation="vertical" />
-        <Slider orientation="vertical" />
-      </div>
-    </div>
-  );
+    );
+  }
+
+  return <p>placeholder</p>;
 }
 
 export default AudioPlayer;
