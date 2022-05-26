@@ -1,6 +1,7 @@
 import IconButton from '@mui/material/IconButton';
 import React, { useEffect, useRef, useState } from 'react';
 import { Pause, PlayArrow } from '@mui/icons-material/';
+import { Slider } from '@mui/material';
 
 export interface AudioPlayerProps {
     audioContext: AudioContext;
@@ -71,9 +72,16 @@ function AudioPlayer(props: AudioPlayerProps) {
   }, [file]);
 
   return (
-    <div className="flex flex-col items-center">
-      <p>{file?.name}</p>
-      <IconButton onClick={handlePlayPause}>{file && playButton}</IconButton>
+    <div>
+      <div className="flex flex-col items-center">
+        <p>{file?.name}</p>
+        <IconButton onClick={handlePlayPause}>{file && playButton}</IconButton>
+      </div>
+      <div className="flex justify-center h-40">
+        <Slider orientation="vertical" />
+        <Slider orientation="vertical" />
+        <Slider orientation="vertical" />
+      </div>
     </div>
   );
 }
