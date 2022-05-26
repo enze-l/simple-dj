@@ -7,7 +7,7 @@ function App() {
   const [files, setFiles] = useState<Array<File | undefined>>([undefined]);
   const [playerFileOne, setPlayerFileOne] = useState<File>();
   const [playerFileTwo, setPlayerFileTwo] = useState<File>();
-  const [volume, setVolume] = useState(50);
+  const [volume, setVolume] = useState(1);
   const audioContext = new AudioContext();
   function handlePlayerOneSongEnd() { setPlayerFileOne(undefined); }
   function handlePlayerTwoSongEnd() { setPlayerFileTwo(undefined); }
@@ -39,17 +39,20 @@ function App() {
             audioContext={audioContext}
             file={playerFileOne}
             handleSongEnd={() => handlePlayerOneSongEnd()}
+            volume={2 - volume}
           />
           <AudioPlayer
             audioContext={audioContext}
             file={playerFileTwo}
             handleSongEnd={() => handlePlayerTwoSongEnd()}
+            volume={volume}
           />
           <Slider
             value={volume}
-            min={1}
-            max={100}
-            marks={[{ value: 50 }]}
+            min={0}
+            max={2}
+            step={0.01}
+            marks={[{ value: 1 }]}
             track={false}
             className="col-span-2"
             onChange={(e, value) => {
