@@ -2,7 +2,6 @@ import { Slider } from '@mui/material';
 import React, { useState } from 'react';
 import AudioPlayer from './AudioPlayer';
 import Song from './Song';
-import Background from './Background';
 
 function App() {
   const [files, setFiles] = useState<Array<File | undefined>>([undefined]);
@@ -34,9 +33,6 @@ function App() {
 
   return (
     <div>
-      <div className="absolute -z-10">
-        <Background />
-      </div>
       <div className="flex">
         <div className="grow">
           <div className="grid grid-cols-2 place-items-center h-screen">

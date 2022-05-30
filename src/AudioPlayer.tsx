@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Pause, PlayArrow } from '@mui/icons-material/';
 import { Slider } from '@mui/material';
 import EqNode from './EqNode';
+import Background from './Background';
 
 export interface AudioPlayerProps {
     audioContext: AudioContext;
@@ -23,9 +24,11 @@ function AudioPlayer(props: AudioPlayerProps) {
   const midNode = useRef<EqNode>();
   const highNode = useRef<EqNode>();
 
+  const analyserNode = useRef<AnalyserNode>();
+
   const [lowNodeGain, setLowNodeGain] = useState(0);
   const [midNodeGain, setMidNodeGain] = useState(0);
-  const [highNodeGain, sethighNodeGain] = useState(0);
+  const [highNodeGain, setHighNodeGain] = useState(0);
 
   const playSong = () => {
     if (audioElement.current) {
@@ -78,10 +81,13 @@ function AudioPlayer(props: AudioPlayerProps) {
       midNode.current = new EqNode(audioContext, 'peaking', 1000);
       highNode.current = new EqNode(audioContext, 'highshelf', 3200);
 
+      analyserNode.current = new AnalyserNode(audioContext);
+
       track.connect(gainNode.current)
         .connect(lowNode.current.getNode())
         .connect(midNode.current.getNode())
         .connect(highNode.current.getNode())
+        .connect(analyserNode.current)
         .connect(audioContext.destination);
       audioContext.resume().then();
     }
@@ -90,51 +96,53 @@ function AudioPlayer(props: AudioPlayerProps) {
   if (file) {
     return (
       <div>
-        <div className="flex flex-col items-center">
-          <p>{file?.name}</p>
-          <IconButton onClick={handlePlayPause}>{file && playButton}</IconButton>
-        </div>
-        <div className="flex justify-center h-40">
-          <Slider
-            value={lowNodeGain}
-            onChange={(e, value) => {
-              if (typeof value === 'number') {
-                setLowNodeGain(value);
-                lowNode.current?.setGain(value);
-              }
-            }}
-            min={-10}
-            max={10}
-            marks={[{ value: 0 }]}
-            orientation="vertical"
-          />
-          <Slider
-            value={midNodeGain}
-            onChange={(e, value) => {
-              if (typeof value === 'number') {
-                setMidNodeGain(value);
-                midNode.current?.setGain(value);
-              }
-            }}
-            min={-10}
-            max={10}
-            marks={[{ value: 0 }]}
-            orientation="vertical"
-          />
-          <Slider
-            value={highNodeGain}
-            onChange={(e, value) => {
-              if (typeof value === 'number') {
-                sethighNodeGain(value);
-                highNode.current?.setGain(value);
-              }
-            }}
-            min={-10}
-            max={10}
-            marks={[{ value: 0 }]}
-            orientation="vertical"
-          />
-        </div>
+        <Background analyserNode={analyserNode.current}>
+          <div className="flex flex-col items-center">
+            <p>{file?.name}</p>
+            <IconButton onClick={handlePlayPause}>{file && playButton}</IconButton>
+          </div>
+          <div className="flex justify-center h-40">
+            <Slider
+              value={lowNodeGain}
+              onChange={(e, value) => {
+                if (typeof value === 'number') {
+                  setLowNodeGain(value);
+                  lowNode.current?.setGain(value);
+                }
+              }}
+              min={-10}
+              max={10}
+              marks={[{ value: 0 }]}
+              orientation="vertical"
+            />
+            <Slider
+              value={midNodeGain}
+              onChange={(e, value) => {
+                if (typeof value === 'number') {
+                  setMidNodeGain(value);
+                  midNode.current?.setGain(value);
+                }
+              }}
+              min={-10}
+              max={10}
+              marks={[{ value: 0 }]}
+              orientation="vertical"
+            />
+            <Slider
+              value={highNodeGain}
+              onChange={(e, value) => {
+                if (typeof value === 'number') {
+                  setHighNodeGain(value);
+                  highNode.current?.setGain(value);
+                }
+              }}
+              min={-10}
+              max={10}
+              marks={[{ value: 0 }]}
+              orientation="vertical"
+            />
+          </div>
+        </Background>
       </div>
     );
   }
