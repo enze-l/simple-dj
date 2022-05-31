@@ -26,9 +26,9 @@ function AudioPlayer(props: AudioPlayerProps) {
 
   const analyserNode = useRef<AnalyserNode>();
 
-  const [lowNodeGain, setLowNodeGain] = useState(0);
-  const [midNodeGain, setMidNodeGain] = useState(0);
-  const [highNodeGain, setHighNodeGain] = useState(0);
+  const [lowerBandThreshold, setLowerBandThreshold] = useState(0);
+  const [middleBandThreshold, setMiddleBandThreshold] = useState(0);
+  const [higherBandThreshold, setHigherBandThreshold] = useState(0);
 
   const playSong = () => {
     if (audioElement.current) {
@@ -56,9 +56,9 @@ function AudioPlayer(props: AudioPlayerProps) {
 
   const stopSong = () => {
     pauseSong();
-    setHighNodeGain(0);
-    setMidNodeGain(0);
-    setLowNodeGain(0);
+    setHigherBandThreshold(0);
+    setMiddleBandThreshold(0);
+    setLowerBandThreshold(0);
     handleSongEnd();
   };
 
@@ -106,10 +106,10 @@ function AudioPlayer(props: AudioPlayerProps) {
           </div>
           <div className="flex justify-center h-40">
             <Slider
-              value={lowNodeGain}
+              value={lowerBandThreshold}
               onChange={(e, value) => {
                 if (typeof value === 'number') {
-                  setLowNodeGain(value);
+                  setLowerBandThreshold(value);
                   lowNode.current?.setGain(value);
                 }
               }}
@@ -119,10 +119,10 @@ function AudioPlayer(props: AudioPlayerProps) {
               orientation="vertical"
             />
             <Slider
-              value={midNodeGain}
+              value={middleBandThreshold}
               onChange={(e, value) => {
                 if (typeof value === 'number') {
-                  setMidNodeGain(value);
+                  setMiddleBandThreshold(value);
                   midNode.current?.setGain(value);
                 }
               }}
@@ -132,10 +132,10 @@ function AudioPlayer(props: AudioPlayerProps) {
               orientation="vertical"
             />
             <Slider
-              value={highNodeGain}
+              value={higherBandThreshold}
               onChange={(e, value) => {
                 if (typeof value === 'number') {
-                  setHighNodeGain(value);
+                  setHigherBandThreshold(value);
                   highNode.current?.setGain(value);
                 }
               }}
