@@ -4,9 +4,7 @@ export interface AudioPlayerProps {
     file: File | undefined;
 }
 
-function Song(props: AudioPlayerProps) {
-  const { file } = props;
-
+function Song({ file }: AudioPlayerProps) {
   return (
     <li>{file?.name}</li>
   );

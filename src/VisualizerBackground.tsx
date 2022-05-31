@@ -5,8 +5,7 @@ interface BackgroundProps{
   children: any[]
 }
 
-function VisualizerBackground(props: BackgroundProps) {
-  const { analyserNode, children } = props;
+function VisualizerBackground({ analyserNode, children }: BackgroundProps) {
   const canvas = createRef<HTMLCanvasElement>();
 
   const drawCircle = (

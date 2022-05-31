@@ -1,9 +1,9 @@
 import IconButton from '@mui/material/IconButton';
 import React, { useEffect, useRef, useState } from 'react';
 import { Pause, PlayArrow } from '@mui/icons-material/';
-import { Slider } from '@mui/material';
 import EqNode from './EqNode';
 import VisualizerBackground from './VisualizerBackground';
+import EQSlider from './EQSlider';
 
 export interface AudioPlayerProps {
     audioContext: AudioContext;
@@ -12,11 +12,11 @@ export interface AudioPlayerProps {
     volume: number;
 }
 
-function AudioPlayer(props: AudioPlayerProps) {
+function AudioPlayer({
+  file, audioContext, handleSongEnd, volume,
+}: AudioPlayerProps) {
   const [playButton, setPlayButton] = useState(<PlayArrow />);
-  const {
-    file, audioContext, handleSongEnd, volume,
-  } = props;
+
   const audioElement = useRef<HTMLAudioElement>();
   const gainNode = useRef<GainNode>();
 
@@ -25,10 +25,6 @@ function AudioPlayer(props: AudioPlayerProps) {
   const highNode = useRef<EqNode>();
 
   const analyserNode = useRef<AnalyserNode>();
-
-  const [lowerBandThreshold, setLowerBandThreshold] = useState(0);
-  const [middleBandThreshold, setMiddleBandThreshold] = useState(0);
-  const [higherBandThreshold, setHigherBandThreshold] = useState(0);
 
   const playSong = () => {
     if (audioElement.current) {
@@ -56,9 +52,6 @@ function AudioPlayer(props: AudioPlayerProps) {
 
   const stopSong = () => {
     pauseSong();
-    setHigherBandThreshold(0);
-    setMiddleBandThreshold(0);
-    setLowerBandThreshold(0);
     handleSongEnd();
   };
 
@@ -104,45 +97,9 @@ function AudioPlayer(props: AudioPlayerProps) {
           <IconButton onClick={handlePlayPause}>{file && playButton}</IconButton>
         </div>
         <div className="flex justify-center h-40">
-          <Slider
-            value={lowerBandThreshold}
-            onChange={(e, value) => {
-              if (typeof value === 'number') {
-                setLowerBandThreshold(value);
-                lowNode.current?.setGain(value);
-              }
-            }}
-            min={-10}
-            max={10}
-            marks={[{ value: 0 }]}
-            orientation="vertical"
-          />
-          <Slider
-            value={middleBandThreshold}
-            onChange={(e, value) => {
-              if (typeof value === 'number') {
-                setMiddleBandThreshold(value);
-                midNode.current?.setGain(value);
-              }
-            }}
-            min={-10}
-            max={10}
-            marks={[{ value: 0 }]}
-            orientation="vertical"
-          />
-          <Slider
-            value={higherBandThreshold}
-            onChange={(e, value) => {
-              if (typeof value === 'number') {
-                setHigherBandThreshold(value);
-                highNode.current?.setGain(value);
-              }
-            }}
-            min={-10}
-            max={10}
-            marks={[{ value: 0 }]}
-            orientation="vertical"
-          />
+          <EQSlider eqNode={lowNode.current} />
+          <EQSlider eqNode={midNode.current} />
+          <EQSlider eqNode={highNode.current} />
         </div>
       </VisualizerBackground>
     );
