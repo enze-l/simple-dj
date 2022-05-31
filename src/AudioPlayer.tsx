@@ -1,9 +1,9 @@
 import IconButton from '@mui/material/IconButton';
 import React, { useEffect, useRef, useState } from 'react';
 import { Pause, PlayArrow } from '@mui/icons-material/';
-import EqNode from './EqNode';
+import EqNode from './Equalizer/EqNode';
 import VisualizerBackground from './VisualizerBackground';
-import EQSlider from './EQSlider';
+import EQSlider from './Equalizer/EQSlider';
 
 export interface AudioPlayerProps {
     audioContext: AudioContext;
