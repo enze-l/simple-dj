@@ -35,39 +35,33 @@ function App() {
     <div className="grid grid-cols-5">
       <div className="col-span-4 grid grid-rows-5 min-h-screen">
         <div className="row-span-4 grid grid-cols-2 content-center justify-items-center">
-          <div className="">
-            <AudioPlayer
-              audioContext={audioContext}
-              file={playerFileOne}
-              handleSongEnd={() => handlePlayerOneSongEnd()}
-              volume={2 - volume}
-            />
-          </div>
-          <div className="">
-            <AudioPlayer
-              audioContext={audioContext}
-              file={playerFileTwo}
-              handleSongEnd={() => handlePlayerTwoSongEnd()}
-              volume={volume}
-            />
-          </div>
-        </div>
-        <div>
-          <Slider
-            value={volume}
-            min={0}
-            max={2}
-            step={0.01}
-            marks={[{ value: 1 }]}
-            track={false}
-            className="col-span-2"
-            onChange={(e, value) => {
-              if (typeof value === 'number') {
-                setVolume(value);
-              }
-            }}
+          <AudioPlayer
+            audioContext={audioContext}
+            file={playerFileOne}
+            handleSongEnd={() => handlePlayerOneSongEnd()}
+            volume={2 - volume}
+          />
+          <AudioPlayer
+            audioContext={audioContext}
+            file={playerFileTwo}
+            handleSongEnd={() => handlePlayerTwoSongEnd()}
+            volume={volume}
           />
         </div>
+        <Slider
+          value={volume}
+          min={0}
+          max={2}
+          step={0.01}
+          marks={[{ value: 1 }]}
+          track={false}
+          className="col-span-2"
+          onChange={(e, value) => {
+            if (typeof value === 'number') {
+              setVolume(value);
+            }
+          }}
+        />
       </div>
       <div>
         <input onChange={handleFileUpload} id="audio" type="file" accept="audio/*" />

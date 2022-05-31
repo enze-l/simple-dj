@@ -98,55 +98,53 @@ function AudioPlayer(props: AudioPlayerProps) {
 
   if (file) {
     return (
-      <div>
-        <VisualizerBackground analyserNode={analyserNode.current}>
-          <div className="flex flex-col items-center">
-            <p>{file?.name}</p>
-            <IconButton onClick={handlePlayPause}>{file && playButton}</IconButton>
-          </div>
-          <div className="flex justify-center h-40">
-            <Slider
-              value={lowerBandThreshold}
-              onChange={(e, value) => {
-                if (typeof value === 'number') {
-                  setLowerBandThreshold(value);
-                  lowNode.current?.setGain(value);
-                }
-              }}
-              min={-10}
-              max={10}
-              marks={[{ value: 0 }]}
-              orientation="vertical"
-            />
-            <Slider
-              value={middleBandThreshold}
-              onChange={(e, value) => {
-                if (typeof value === 'number') {
-                  setMiddleBandThreshold(value);
-                  midNode.current?.setGain(value);
-                }
-              }}
-              min={-10}
-              max={10}
-              marks={[{ value: 0 }]}
-              orientation="vertical"
-            />
-            <Slider
-              value={higherBandThreshold}
-              onChange={(e, value) => {
-                if (typeof value === 'number') {
-                  setHigherBandThreshold(value);
-                  highNode.current?.setGain(value);
-                }
-              }}
-              min={-10}
-              max={10}
-              marks={[{ value: 0 }]}
-              orientation="vertical"
-            />
-          </div>
-        </VisualizerBackground>
-      </div>
+      <VisualizerBackground analyserNode={analyserNode.current}>
+        <div className="flex flex-col items-center">
+          <p>{file?.name}</p>
+          <IconButton onClick={handlePlayPause}>{file && playButton}</IconButton>
+        </div>
+        <div className="flex justify-center h-40">
+          <Slider
+            value={lowerBandThreshold}
+            onChange={(e, value) => {
+              if (typeof value === 'number') {
+                setLowerBandThreshold(value);
+                lowNode.current?.setGain(value);
+              }
+            }}
+            min={-10}
+            max={10}
+            marks={[{ value: 0 }]}
+            orientation="vertical"
+          />
+          <Slider
+            value={middleBandThreshold}
+            onChange={(e, value) => {
+              if (typeof value === 'number') {
+                setMiddleBandThreshold(value);
+                midNode.current?.setGain(value);
+              }
+            }}
+            min={-10}
+            max={10}
+            marks={[{ value: 0 }]}
+            orientation="vertical"
+          />
+          <Slider
+            value={higherBandThreshold}
+            onChange={(e, value) => {
+              if (typeof value === 'number') {
+                setHigherBandThreshold(value);
+                highNode.current?.setGain(value);
+              }
+            }}
+            min={-10}
+            max={10}
+            marks={[{ value: 0 }]}
+            orientation="vertical"
+          />
+        </div>
+      </VisualizerBackground>
     );
   }
 
