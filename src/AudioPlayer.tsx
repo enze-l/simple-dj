@@ -56,7 +56,9 @@ function AudioPlayer(props: AudioPlayerProps) {
 
   const stopSong = () => {
     pauseSong();
-    audioElement.current = undefined;
+    setHighNodeGain(0);
+    setMidNodeGain(0);
+    setLowNodeGain(0);
     handleSongEnd();
   };
 

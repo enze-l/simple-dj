@@ -17,10 +17,7 @@ function VisualizerBackground(props: BackgroundProps) {
     y:number,
     size:number,
   ) => {
-    // const array = frequencyArray.slice(0, 160);
-    // const average = array.reduce((a, b) => a + b, 0) / array.length;
-    const radgrad = context
-      .createRadialGradient(x, y, 0, x, y, size);
+    const radgrad = context.createRadialGradient(x, y, 0, x, y, size);
     radgrad.addColorStop(0, colorInner);
     radgrad.addColorStop(1, colorOuter);
     context.fillStyle = radgrad;
@@ -52,9 +49,9 @@ function VisualizerBackground(props: BackgroundProps) {
           const frequencyArray = new Uint8Array(analyserNode.frequencyBinCount);
           analyserNode?.getByteTimeDomainData(frequencyArray);
 
-          lowFrequencies = getAverage(frequencyArray.slice(0, 100));
-          midFrequencies = getAverage(frequencyArray.slice(100, 300));
-          highFrequencies = getAverage(frequencyArray.slice(300, 1024));
+          lowFrequencies = getAverage(frequencyArray.slice(0, 50));
+          midFrequencies = getAverage(frequencyArray.slice(50, 100));
+          highFrequencies = getAverage(frequencyArray.slice(900, 1000));
         }
 
         const halfPosition = canvasSquareSize / 2;
