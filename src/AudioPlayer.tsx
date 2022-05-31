@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Pause, PlayArrow } from '@mui/icons-material/';
 import { Slider } from '@mui/material';
 import EqNode from './EqNode';
-import Background from './Background';
+import VisualizerBackground from './VisualizerBackground';
 
 export interface AudioPlayerProps {
     audioContext: AudioContext;
@@ -55,6 +55,7 @@ function AudioPlayer(props: AudioPlayerProps) {
   };
 
   const stopSong = () => {
+    pauseSong();
     audioElement.current = undefined;
     handleSongEnd();
   };
@@ -96,7 +97,7 @@ function AudioPlayer(props: AudioPlayerProps) {
   if (file) {
     return (
       <div>
-        <Background analyserNode={analyserNode.current}>
+        <VisualizerBackground analyserNode={analyserNode.current}>
           <div className="flex flex-col items-center">
             <p>{file?.name}</p>
             <IconButton onClick={handlePlayPause}>{file && playButton}</IconButton>
@@ -142,12 +143,12 @@ function AudioPlayer(props: AudioPlayerProps) {
               orientation="vertical"
             />
           </div>
-        </Background>
+        </VisualizerBackground>
       </div>
     );
   }
 
-  return <p>placeholder</p>;
+  return <div />;
 }
 
 export default AudioPlayer;
