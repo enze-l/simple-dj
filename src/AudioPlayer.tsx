@@ -6,7 +6,7 @@ import VisualizerBackground from './VisualizerBackground';
 import EQSlider from './Equalizer/EQSlider';
 
 export interface AudioPlayerProps {
-    audioContext: AudioContext;
+    audioContext: AudioContext | undefined;
     file: File | undefined;
     handleSongEnd: any;
     volume: number;
@@ -62,7 +62,7 @@ function AudioPlayer({
   }, [volume]);
 
   useEffect(() => {
-    if (file) {
+    if (file && audioContext) {
       pauseSong();
       audioElement.current = new Audio(URL.createObjectURL(file));
       if (audioElement.current) {
@@ -87,7 +87,7 @@ function AudioPlayer({
         .connect(audioContext.destination);
       audioContext.resume().then();
     }
-  }, [file]);
+  }, [file, audioContext]);
 
   if (file) {
     return (

@@ -8,7 +8,7 @@ function App() {
   const [playerFileOne, setPlayerFileOne] = useState<File>();
   const [playerFileTwo, setPlayerFileTwo] = useState<File>();
   const [volume, setVolume] = useState(1);
-  const audioContext = new AudioContext();
+  const [audioContext] = useState(new AudioContext());
   function handlePlayerOneSongEnd() { setPlayerFileOne(undefined); }
   function handlePlayerTwoSongEnd() { setPlayerFileTwo(undefined); }
 
