@@ -75,15 +75,17 @@ function AudioPlayer({
         };
       }
       const track = audioContext.createMediaElementSource(audioElement.current);
-      gainNode.current = audioContext.createGain();
 
+      gainNode.current = audioContext.createGain();
       lowNode.current = new EqNode(audioContext, 'lowshelf', 320);
       midNode.current = new EqNode(audioContext, 'peaking', 1000);
       highNode.current = new EqNode(audioContext, 'highshelf', 3200);
-
       analyserNode.current = new AnalyserNode(audioContext);
 
       setVolume(volume);
+      lowNode.current?.setGain(0);
+      midNode.current?.setGain(0);
+      highNode.current?.setGain(0);
 
       track.connect(gainNode.current)
         .connect(lowNode.current.getNode())
