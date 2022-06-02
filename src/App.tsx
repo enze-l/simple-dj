@@ -2,6 +2,7 @@ import { Slider } from '@mui/material';
 import React, { useState } from 'react';
 import AudioPlayer from './AudioPlayer';
 import Song from './Song';
+import Waveform from './Visualizer/Waveform';
 
 function App() {
   const [files, setFiles] = useState<Array<File | undefined>>([undefined]);
@@ -33,7 +34,7 @@ function App() {
 
   return (
     <div className="grid grid-cols-5">
-      <div className="col-span-4 grid grid-rows-5 min-h-screen">
+      <div className="col-span-4 grid grid-rows-6 min-h-screen">
         <div className="row-span-4 grid grid-cols-2 content-center justify-items-center">
           <AudioPlayer
             audioContext={audioContext}
@@ -62,6 +63,9 @@ function App() {
             }
           }}
         />
+        <div className="col-span-2">
+          <Waveform />
+        </div>
       </div>
       <div>
         <input onChange={handleFileUpload} id="audio" type="file" accept="audio/*" />

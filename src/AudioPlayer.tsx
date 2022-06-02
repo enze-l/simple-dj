@@ -2,7 +2,7 @@ import IconButton from '@mui/material/IconButton';
 import React, { useEffect, useRef, useState } from 'react';
 import { Pause, PlayArrow } from '@mui/icons-material/';
 import EqNode from './Equalizer/EqNode';
-import VisualizerBackground from './VisualizerBackground';
+import FrequencyVisualizer from './Visualizer/FrequencyVisualizer';
 import EQSlider from './Equalizer/EQSlider';
 
 export interface AudioPlayerProps {
@@ -91,7 +91,7 @@ function AudioPlayer({
 
   if (file) {
     return (
-      <VisualizerBackground analyserNode={analyserNode.current}>
+      <FrequencyVisualizer analyserNode={analyserNode.current}>
         <div className="flex flex-col items-center">
           <p>{file?.name}</p>
           <IconButton onClick={handlePlayPause}>{file && playButton}</IconButton>
@@ -101,7 +101,7 @@ function AudioPlayer({
           <EQSlider eqNode={midNode.current} />
           <EQSlider eqNode={highNode.current} />
         </div>
-      </VisualizerBackground>
+      </FrequencyVisualizer>
     );
   }
 
