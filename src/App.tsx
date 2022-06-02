@@ -34,8 +34,8 @@ function App() {
 
   return (
     <div className="grid grid-cols-5">
-      <div className="col-span-4 grid grid-rows-6 min-h-screen">
-        <div className="row-span-4 grid grid-cols-2 content-center justify-items-center">
+      <div className="col-span-4 grid min-h-screen">
+        <div className="grid grid-cols-2 items-center">
           <AudioPlayer
             audioContext={audioContext}
             file={playerFileOne}
@@ -64,7 +64,10 @@ function App() {
           }}
         />
         <div className="col-span-2">
-          <Waveform />
+          <Waveform audioContext={audioContext} />
+        </div>
+        <div className="col-span-2">
+          <Waveform audioContext={audioContext} />
         </div>
       </div>
       <div>

@@ -3,7 +3,11 @@ import WaveSurfer from 'wavesurfer.js';
 
 const File = require('./TestSong.mp3');
 
-function Waveform() {
+interface WaveformProps{
+  audioContext: AudioContext;
+}
+
+function Waveform({ audioContext }: WaveformProps) {
   const waveformRef = useRef<any>();
   const alreadyTriggered = useRef(false);
 
@@ -11,6 +15,7 @@ function Waveform() {
     if (waveformRef.current && !alreadyTriggered.current) {
       const wavesurfer = WaveSurfer.create({
         container: waveformRef.current,
+        audioContext,
         barWidth: 1,
         cursorColor: '#2772cf',
         cursorWidth: 2,

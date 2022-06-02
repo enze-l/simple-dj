@@ -97,8 +97,8 @@ function AudioPlayer({
     }
   }, [file, audioContext]);
 
-  if (file) {
-    return (
+  return (
+    <div className={file ? 'visible' : 'invisible'}>
       <FrequencyVisualizer analyserNode={analyserNode.current}>
         <div className="flex flex-col items-center">
           <p>{file?.name}</p>
@@ -110,10 +110,8 @@ function AudioPlayer({
           <EQSlider eqNode={highNode.current} />
         </div>
       </FrequencyVisualizer>
-    );
-  }
-
-  return <div />;
+    </div>
+  );
 }
 
 export default AudioPlayer;
