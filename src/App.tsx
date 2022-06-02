@@ -64,10 +64,10 @@ function App() {
           }}
         />
         <div className="col-span-2">
-          <Waveform audioContext={audioContext} />
+          <Waveform audioContext={audioContext} file={playerFileOne} />
         </div>
         <div className="col-span-2">
-          <Waveform audioContext={audioContext} />
+          <Waveform audioContext={audioContext} file={playerFileTwo} />
         </div>
       </div>
       <div>

@@ -1,34 +1,46 @@
 import React, { useEffect, useRef } from 'react';
 import WaveSurfer from 'wavesurfer.js';
-
-const File = require('./TestSong.mp3');
+import { Button } from '@mui/material';
 
 interface WaveformProps{
   audioContext: AudioContext;
+  file: File | undefined;
 }
 
-function Waveform({ audioContext }: WaveformProps) {
+function Waveform({ audioContext, file }: WaveformProps) {
   const waveformRef = useRef<any>();
   const alreadyTriggered = useRef(false);
+  let wavesurfer: WaveSurfer;
+
+  const play = () => {
+    wavesurfer?.playPause();
+  };
 
   useEffect(() => {
-    if (waveformRef.current && !alreadyTriggered.current) {
-      const wavesurfer = WaveSurfer.create({
-        container: waveformRef.current,
-        audioContext,
-        barWidth: 1,
-        cursorColor: '#2772cf',
-        cursorWidth: 2,
-        normalize: true,
-        responsive: true,
-      });
-      wavesurfer.load(File);
-      alreadyTriggered.current = true;
+    if (file) {
+      if (waveformRef.current && !alreadyTriggered.current) {
+        wavesurfer = WaveSurfer.create({
+          container: waveformRef.current,
+          audioContext,
+          cursorColor: '#2772cf',
+          cursorWidth: 2,
+          normalize: true,
+          responsive: true,
+          scrollParent: true,
+          minPxPerSec: 100,
+          barWidth: 1,
+        });
+        alreadyTriggered.current = true;
+      }
+      const audioElement = new Audio(URL.createObjectURL(file));
+      wavesurfer.load(audioElement);
+      wavesurfer.on('finish', () => { wavesurfer.destroy(); });
     }
-  }, []);
+  }, [file]);
 
   return (
     <div>
+      <Button className="absolute" onClick={play}>Play/Pause</Button>
       <div ref={waveformRef} className="w-full" />
     </div>
   );
