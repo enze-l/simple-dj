@@ -55,10 +55,14 @@ function AudioPlayer({
     handleSongEnd();
   };
 
-  useEffect(() => {
+  const setVolume = (value: number) => {
     if (gainNode.current) {
-      gainNode.current.gain.value = Math.min(volume, 1);
+      gainNode.current.gain.value = Math.min(value, 1);
     }
+  };
+
+  useEffect(() => {
+    setVolume(volume);
   }, [volume]);
 
   useEffect(() => {
@@ -78,6 +82,8 @@ function AudioPlayer({
       highNode.current = new EqNode(audioContext, 'highshelf', 3200);
 
       analyserNode.current = new AnalyserNode(audioContext);
+
+      setVolume(volume);
 
       track.connect(gainNode.current)
         .connect(lowNode.current.getNode())
