@@ -7,6 +7,7 @@ import EQSlider from './Equalizer/EQSlider';
 
 export interface AudioPlayerProps {
     audioContext: AudioContext | undefined;
+    setAudioNodes: any;
     file: File | undefined;
     volume: number;
     play: any;
@@ -14,7 +15,7 @@ export interface AudioPlayerProps {
 }
 
 function SoundControl({
-  file, audioContext, volume, play, playing,
+  setAudioNodes, file, audioContext, volume, play, playing,
 }: AudioPlayerProps) {
   const [playButton, setPlayButton] = useState(<PlayArrow />);
 
@@ -67,12 +68,13 @@ function SoundControl({
       midNode.current?.setGain(0);
       highNode.current?.setGain(0);
 
-      gainNode.current
-        .connect(lowNode.current.getNode())
-        .connect(midNode.current.getNode())
-        .connect(highNode.current.getNode())
-        .connect(analyserNode.current)
-        .connect(audioContext.destination);
+      setAudioNodes([
+        gainNode.current,
+        lowNode.current?.getNode(),
+        midNode.current?.getNode(),
+        highNode.current?.getNode(),
+        analyserNode.current,
+      ]);
     }
   }, [file, audioContext]);
 

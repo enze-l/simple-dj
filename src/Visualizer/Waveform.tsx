@@ -4,12 +4,13 @@ import WaveSurfer from 'wavesurfer.js';
 interface WaveformProps{
   audioContext: AudioContext;
   file: File | undefined;
+  audioNodes: AudioNode[] | undefined;
   playing: boolean;
   handleSongEnd: any;
 }
 
 function Waveform({
-  audioContext, file, playing, handleSongEnd,
+  audioNodes, audioContext, file, playing, handleSongEnd,
 }: WaveformProps) {
   const waveformRef = useRef<any>();
   const wavesurfer = useRef<WaveSurfer>();
@@ -38,13 +39,16 @@ function Waveform({
         });
         const audioElement = new Audio(URL.createObjectURL(file));
         wavesurfer.current.load(audioElement);
+        if (audioNodes) {
+          wavesurfer.current?.backend.setFilters(audioNodes);
+        }
         wavesurfer.current.on('finish', () => {
           handleSongEnd();
           wavesurfer.current?.destroy();
         });
       }
     }
-  }, [file]);
+  }, [audioNodes]);
 
   return (
     <div>

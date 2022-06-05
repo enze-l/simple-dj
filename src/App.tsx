@@ -6,12 +6,15 @@ import Waveform from './Visualizer/Waveform';
 
 function App() {
   const [files, setFiles] = useState<Array<File | undefined>>([undefined]);
+  const [audioNodesOne, setAudioNodesOne] = useState<AudioNode[] | undefined>();
+  const [audioNodesTwo, setAudioNodesTwo] = useState<AudioNode[] | undefined>();
   const [playerFileOne, setPlayerFileOne] = useState<File>();
   const [playerFileTwo, setPlayerFileTwo] = useState<File>();
   const [volume, setVolume] = useState(1);
   const [audioContext] = useState(new AudioContext());
   const [onePlaying, setOnePlaying] = useState(false);
   const [twoPlaying, setTwoPlaying] = useState(false);
+
   function handlePlayerOneSongEnd() { setPlayerFileOne(undefined); }
   function handlePlayerTwoSongEnd() { setPlayerFileTwo(undefined); }
 
@@ -40,17 +43,19 @@ function App() {
         <div className="grid grid-cols-2 items-center">
           <SoundControl
             audioContext={audioContext}
-            file={playerFileOne}
+            setAudioNodes={(node: AudioNode[]) => setAudioNodesOne(node)}
             volume={2 - volume}
             play={(playing: boolean) => setOnePlaying(playing)}
             playing={onePlaying}
+            file={playerFileOne}
           />
           <SoundControl
             audioContext={audioContext}
-            file={playerFileTwo}
+            setAudioNodes={(node: AudioNode[]) => setAudioNodesTwo(node)}
             volume={volume}
             play={(playing: boolean) => setTwoPlaying(playing)}
             playing={twoPlaying}
+            file={playerFileTwo}
           />
         </div>
         <Slider
@@ -70,17 +75,19 @@ function App() {
         <div className="col-span-2">
           <Waveform
             audioContext={audioContext}
-            file={playerFileOne}
+            audioNodes={audioNodesOne}
             playing={onePlaying}
             handleSongEnd={() => handlePlayerOneSongEnd()}
+            file={playerFileOne}
           />
         </div>
         <div className="col-span-2">
           <Waveform
             audioContext={audioContext}
-            file={playerFileTwo}
+            audioNodes={audioNodesTwo}
             playing={twoPlaying}
             handleSongEnd={() => handlePlayerTwoSongEnd()}
+            file={playerFileTwo}
           />
         </div>
       </div>
