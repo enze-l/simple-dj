@@ -18,13 +18,10 @@ function SoundControl({
 }: AudioPlayerProps) {
   const [playButton, setPlayButton] = useState(<PlayArrow />);
 
-  const audioElement = useRef<HTMLAudioElement>();
   const gainNode = useRef<GainNode>();
-
   const lowNode = useRef<EqNode>();
   const midNode = useRef<EqNode>();
   const highNode = useRef<EqNode>();
-
   const analyserNode = useRef<AnalyserNode>();
 
   const playSong = () => {
@@ -45,10 +42,6 @@ function SoundControl({
     }
   };
 
-  const stopSong = () => {
-    pauseSong();
-  };
-
   const setVolume = (value: number) => {
     if (gainNode.current) {
       gainNode.current.gain.value = Math.min(value, 1);
@@ -62,13 +55,6 @@ function SoundControl({
   useEffect(() => {
     if (file && audioContext) {
       pauseSong();
-      audioElement.current = new Audio(URL.createObjectURL(file));
-      if (audioElement.current) {
-        audioElement.current.onended = () => {
-          stopSong();
-        };
-      }
-      const track = audioContext.createMediaElementSource(audioElement.current);
 
       gainNode.current = audioContext.createGain();
       lowNode.current = new EqNode(audioContext, 'lowshelf', 320);
@@ -81,13 +67,12 @@ function SoundControl({
       midNode.current?.setGain(0);
       highNode.current?.setGain(0);
 
-      track.connect(gainNode.current)
+      gainNode.current
         .connect(lowNode.current.getNode())
         .connect(midNode.current.getNode())
         .connect(highNode.current.getNode())
         .connect(analyserNode.current)
         .connect(audioContext.destination);
-      audioContext.resume().then();
     }
   }, [file, audioContext]);
 
