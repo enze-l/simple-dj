@@ -1,7 +1,7 @@
 import { Slider } from '@mui/material';
 import React, { useState } from 'react';
-import AudioPlayer from './AudioPlayer';
-import Song from './Song';
+import SoundControl from './SoundControl';
+import SongListItem from './SongListItem';
 import Waveform from './Visualizer/Waveform';
 
 function App() {
@@ -10,6 +10,8 @@ function App() {
   const [playerFileTwo, setPlayerFileTwo] = useState<File>();
   const [volume, setVolume] = useState(1);
   const [audioContext] = useState(new AudioContext());
+  const [onePlaying, setOnePlaying] = useState(false);
+  const [twoPlaying, setTwoPlaying] = useState(false);
   function handlePlayerOneSongEnd() { setPlayerFileOne(undefined); }
   function handlePlayerTwoSongEnd() { setPlayerFileTwo(undefined); }
 
@@ -36,17 +38,19 @@ function App() {
     <div className="grid grid-cols-5">
       <div className="col-span-4 grid min-h-screen">
         <div className="grid grid-cols-2 items-center">
-          <AudioPlayer
+          <SoundControl
             audioContext={audioContext}
             file={playerFileOne}
-            handleSongEnd={() => handlePlayerOneSongEnd()}
             volume={2 - volume}
+            play={(playing: boolean) => setOnePlaying(playing)}
+            playing={onePlaying}
           />
-          <AudioPlayer
+          <SoundControl
             audioContext={audioContext}
             file={playerFileTwo}
-            handleSongEnd={() => handlePlayerTwoSongEnd()}
             volume={volume}
+            play={(playing: boolean) => setTwoPlaying(playing)}
+            playing={twoPlaying}
           />
         </div>
         <Slider
@@ -64,10 +68,20 @@ function App() {
           }}
         />
         <div className="col-span-2">
-          <Waveform audioContext={audioContext} file={playerFileOne} />
+          <Waveform
+            audioContext={audioContext}
+            file={playerFileOne}
+            playing={onePlaying}
+            handleSongEnd={() => handlePlayerOneSongEnd()}
+          />
         </div>
         <div className="col-span-2">
-          <Waveform audioContext={audioContext} file={playerFileTwo} />
+          <Waveform
+            audioContext={audioContext}
+            file={playerFileTwo}
+            playing={twoPlaying}
+            handleSongEnd={() => handlePlayerTwoSongEnd()}
+          />
         </div>
       </div>
       <div>
@@ -75,7 +89,7 @@ function App() {
         <ul>
           {files.map((file, index) => (
             <div onKeyDown={() => handleSongItemClicked(index)} role="button" tabIndex={index} onClick={() => handleSongItemClicked(index)}>
-              <Song file={file} />
+              <SongListItem file={file} />
             </div>
           ))}
         </ul>

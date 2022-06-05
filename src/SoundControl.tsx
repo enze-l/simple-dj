@@ -8,12 +8,13 @@ import EQSlider from './Equalizer/EQSlider';
 export interface AudioPlayerProps {
     audioContext: AudioContext | undefined;
     file: File | undefined;
-    handleSongEnd: any;
     volume: number;
+    play: any;
+    playing: boolean;
 }
 
-function AudioPlayer({
-  file, audioContext, handleSongEnd, volume,
+function SoundControl({
+  file, audioContext, volume, play, playing,
 }: AudioPlayerProps) {
   const [playButton, setPlayButton] = useState(<PlayArrow />);
 
@@ -27,32 +28,25 @@ function AudioPlayer({
   const analyserNode = useRef<AnalyserNode>();
 
   const playSong = () => {
-    if (audioElement.current) {
-      audioElement.current.play();
-      setPlayButton(<Pause />);
-    }
+    setPlayButton(<Pause />);
+    play(true);
   };
 
   const pauseSong = () => {
-    if (audioElement.current) {
-      audioElement.current.pause();
-      setPlayButton(<PlayArrow />);
-    }
+    setPlayButton(<PlayArrow />);
+    play(false);
   };
 
   const handlePlayPause = () => {
-    if (audioElement.current) {
-      if (audioElement.current.paused) {
-        playSong();
-      } else {
-        pauseSong();
-      }
+    if (playing) {
+      pauseSong();
+    } else {
+      playSong();
     }
   };
 
   const stopSong = () => {
     pauseSong();
-    handleSongEnd();
   };
 
   const setVolume = (value: number) => {
@@ -114,4 +108,4 @@ function AudioPlayer({
   );
 }
 
-export default AudioPlayer;
+export default SoundControl;
