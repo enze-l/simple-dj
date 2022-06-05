@@ -14,12 +14,16 @@ function Waveform({
 }: WaveformProps) {
   const waveformRef = useRef<any>();
   const wavesurfer = useRef<WaveSurfer>();
+  const reset = useRef(false);
 
   useEffect(() => {
     if (playing) {
       wavesurfer.current?.play();
     } else {
-      wavesurfer.current?.pause();
+      if (!reset) {
+        wavesurfer.current?.pause();
+      }
+      reset.current = false;
     }
   }, [playing]);
 
@@ -46,6 +50,7 @@ function Waveform({
           handleSongEnd();
           wavesurfer.current?.destroy();
         });
+        reset.current = true;
       }
     }
   }, [audioNodes]);
