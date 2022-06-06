@@ -1,6 +1,6 @@
 import IconButton from '@mui/material/IconButton';
 import React, { useEffect, useRef, useState } from 'react';
-import { Pause, PlayArrow } from '@mui/icons-material/';
+import { Close, Pause, PlayArrow } from '@mui/icons-material/';
 import EqNode from './Equalizer/EqNode';
 import FrequencyVisualizer from './Visualizer/FrequencyVisualizer';
 import EQSlider from './Equalizer/EQSlider';
@@ -12,10 +12,11 @@ export interface AudioPlayerProps {
     volume: number;
     playing: boolean;
     togglePlay: any;
+    handlePlayerClose: any;
 }
 
 function SoundControl({
-  setAudioNodes, file, togglePlay, audioContext, volume, playing,
+  setAudioNodes, file, togglePlay, handlePlayerClose, audioContext, volume, playing,
 }: AudioPlayerProps) {
   const [playButton, setPlayButton] = useState(<PlayArrow />);
 
@@ -29,6 +30,10 @@ function SoundControl({
     if (gainNode.current) {
       gainNode.current.gain.value = Math.min(value, 1);
     }
+  };
+
+  const closePlayer = () => {
+    handlePlayerClose();
   };
 
   useEffect(() => {
@@ -69,6 +74,9 @@ function SoundControl({
   return (
     <div className={file ? 'visible' : 'invisible'}>
       <FrequencyVisualizer analyserNode={analyserNode.current}>
+        <div className="flex flex-col items-end">
+          <IconButton onClick={closePlayer} className="items-end"><Close /></IconButton>
+        </div>
         <div className="flex flex-col items-center">
           <p>{file?.name}</p>
           <IconButton onClick={togglePlay}>{file && playButton}</IconButton>

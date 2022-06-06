@@ -8,10 +8,11 @@ interface WaveformProps{
   handleSongEnd: any;
   play: any;
   toggle: number;
+  close: number;
 }
 
 function Waveform({
-  audioNodes, toggle, audioContext, play, file, handleSongEnd,
+  audioNodes, toggle, close, audioContext, play, file, handleSongEnd,
 }: WaveformProps) {
   const waveformRef = useRef<any>();
   const wavesurfer = useRef<WaveSurfer>();
@@ -21,6 +22,11 @@ function Waveform({
       wavesurfer.current?.playPause();
     }
   }, [toggle]);
+
+  useEffect(() => {
+    play(false);
+    wavesurfer.current?.destroy();
+  }, [close]);
 
   useEffect(() => {
     if (file) {
@@ -49,8 +55,6 @@ function Waveform({
         });
         wavesurfer.current.on('finish', () => {
           handleSongEnd();
-          play(false);
-          wavesurfer.current?.destroy();
         });
       }
     }

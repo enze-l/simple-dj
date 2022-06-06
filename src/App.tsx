@@ -16,9 +16,17 @@ function App() {
   const [twoPlaying, setTwoPlaying] = useState(false);
   const [togglePlayerOne, setTogglePlayerOne] = useState(0);
   const [togglePlayerTwo, setTogglePlayerTwo] = useState(0);
+  const [togglePLayerOneClose, setTogglePlayerOneClose] = useState(0);
+  const [togglePLayerTwoClose, setTogglePlayerTwoClose] = useState(0);
 
-  function handlePlayerOneSongEnd() { setPlayerFileOne(undefined); }
-  function handlePlayerTwoSongEnd() { setPlayerFileTwo(undefined); }
+  function handlePlayerOneSongEnd() {
+    setTogglePlayerOneClose(togglePLayerOneClose + 1);
+    setPlayerFileOne(undefined);
+  }
+  function handlePlayerTwoSongEnd() {
+    setPlayerFileTwo(undefined);
+    setTogglePlayerTwoClose(togglePLayerTwoClose + 1);
+  }
 
   const handleFileUpload = (e: any) => {
     if (e.target.files[0]) {
@@ -50,6 +58,7 @@ function App() {
             playing={onePlaying}
             file={playerFileOne}
             togglePlay={() => setTogglePlayerOne(togglePlayerOne + 1)}
+            handlePlayerClose={() => handlePlayerOneSongEnd()}
           />
           <SoundControl
             audioContext={audioContext}
@@ -58,6 +67,7 @@ function App() {
             playing={twoPlaying}
             file={playerFileTwo}
             togglePlay={() => setTogglePlayerTwo(togglePlayerTwo + 1)}
+            handlePlayerClose={() => handlePlayerTwoSongEnd()}
           />
         </div>
         <Slider
@@ -82,6 +92,7 @@ function App() {
             play={(state: boolean) => setOnePlaying(state)}
             handleSongEnd={() => handlePlayerOneSongEnd()}
             file={playerFileOne}
+            close={togglePLayerOneClose}
           />
         </div>
         <div className="col-span-2">
@@ -92,6 +103,7 @@ function App() {
             play={(state: boolean) => setTwoPlaying(state)}
             handleSongEnd={() => handlePlayerTwoSongEnd()}
             file={playerFileTwo}
+            close={togglePLayerTwoClose}
           />
         </div>
       </div>
