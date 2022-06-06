@@ -10,12 +10,12 @@ export interface AudioPlayerProps {
     setAudioNodes: any;
     file: File | undefined;
     volume: number;
-    play: any;
     playing: boolean;
+    togglePlay: any;
 }
 
 function SoundControl({
-  setAudioNodes, file, audioContext, volume, play, playing,
+  setAudioNodes, file, togglePlay, audioContext, volume, playing,
 }: AudioPlayerProps) {
   const [playButton, setPlayButton] = useState(<PlayArrow />);
 
@@ -25,24 +25,6 @@ function SoundControl({
   const highNode = useRef<EqNode>();
   const analyserNode = useRef<AnalyserNode>();
 
-  const playSong = () => {
-    setPlayButton(<Pause />);
-    play(true);
-  };
-
-  const pauseSong = () => {
-    setPlayButton(<PlayArrow />);
-    play(false);
-  };
-
-  const handlePlayPause = () => {
-    if (playing) {
-      pauseSong();
-    } else {
-      playSong();
-    }
-  };
-
   const setVolume = (value: number) => {
     if (gainNode.current) {
       gainNode.current.gain.value = Math.min(value, 1);
@@ -50,13 +32,19 @@ function SoundControl({
   };
 
   useEffect(() => {
+    if (playing) {
+      setPlayButton(<Pause />);
+    } else {
+      setPlayButton(<PlayArrow />);
+    }
+  }, [playing]);
+
+  useEffect(() => {
     setVolume(volume);
   }, [volume]);
 
   useEffect(() => {
     if (file && audioContext) {
-      pauseSong();
-
       gainNode.current = audioContext.createGain();
       lowNode.current = new EqNode(audioContext, 'lowshelf', 320);
       midNode.current = new EqNode(audioContext, 'peaking', 1000);
@@ -83,7 +71,7 @@ function SoundControl({
       <FrequencyVisualizer analyserNode={analyserNode.current}>
         <div className="flex flex-col items-center">
           <p>{file?.name}</p>
-          <IconButton onClick={handlePlayPause}>{file && playButton}</IconButton>
+          <IconButton onClick={togglePlay}>{file && playButton}</IconButton>
         </div>
         <div className="flex justify-center h-40">
           <EQSlider eqNode={lowNode.current} />

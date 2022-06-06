@@ -5,27 +5,22 @@ interface WaveformProps{
   audioContext: AudioContext;
   file: File | undefined;
   audioNodes: AudioNode[] | undefined;
-  playing: boolean;
   handleSongEnd: any;
+  play: any;
+  toggle: number;
 }
 
 function Waveform({
-  audioNodes, audioContext, file, playing, handleSongEnd,
+  audioNodes, toggle, audioContext, play, file, handleSongEnd,
 }: WaveformProps) {
   const waveformRef = useRef<any>();
   const wavesurfer = useRef<WaveSurfer>();
-  const reset = useRef(false);
 
   useEffect(() => {
-    if (playing) {
-      wavesurfer.current?.play();
-    } else {
-      if (!reset) {
-        wavesurfer.current?.pause();
-      }
-      reset.current = false;
+    if (wavesurfer.current) {
+      wavesurfer.current?.playPause();
     }
-  }, [playing]);
+  }, [toggle]);
 
   useEffect(() => {
     if (file) {
@@ -46,11 +41,17 @@ function Waveform({
         if (audioNodes) {
           wavesurfer.current?.backend.setFilters(audioNodes);
         }
+        wavesurfer.current?.on('play', () => {
+          play(true);
+        });
+        wavesurfer.current?.on('pause', () => {
+          play(false);
+        });
         wavesurfer.current.on('finish', () => {
           handleSongEnd();
+          play(false);
           wavesurfer.current?.destroy();
         });
-        reset.current = true;
       }
     }
   }, [audioNodes]);

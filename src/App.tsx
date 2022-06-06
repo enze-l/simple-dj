@@ -14,6 +14,8 @@ function App() {
   const [audioContext] = useState(new AudioContext());
   const [onePlaying, setOnePlaying] = useState(false);
   const [twoPlaying, setTwoPlaying] = useState(false);
+  const [togglePlayerOne, setTogglePlayerOne] = useState(0);
+  const [togglePlayerTwo, setTogglePlayerTwo] = useState(0);
 
   function handlePlayerOneSongEnd() { setPlayerFileOne(undefined); }
   function handlePlayerTwoSongEnd() { setPlayerFileTwo(undefined); }
@@ -45,17 +47,17 @@ function App() {
             audioContext={audioContext}
             setAudioNodes={(node: AudioNode[]) => setAudioNodesOne(node)}
             volume={2 - volume}
-            play={(playing: boolean) => setOnePlaying(playing)}
             playing={onePlaying}
             file={playerFileOne}
+            togglePlay={() => setTogglePlayerOne(togglePlayerOne + 1)}
           />
           <SoundControl
             audioContext={audioContext}
             setAudioNodes={(node: AudioNode[]) => setAudioNodesTwo(node)}
             volume={volume}
-            play={(playing: boolean) => setTwoPlaying(playing)}
             playing={twoPlaying}
             file={playerFileTwo}
+            togglePlay={() => setTogglePlayerTwo(togglePlayerTwo + 1)}
           />
         </div>
         <Slider
@@ -74,18 +76,20 @@ function App() {
         />
         <div className="col-span-2">
           <Waveform
+            toggle={togglePlayerOne}
             audioContext={audioContext}
             audioNodes={audioNodesOne}
-            playing={onePlaying}
+            play={(state: boolean) => setOnePlaying(state)}
             handleSongEnd={() => handlePlayerOneSongEnd()}
             file={playerFileOne}
           />
         </div>
         <div className="col-span-2">
           <Waveform
+            toggle={togglePlayerTwo}
             audioContext={audioContext}
             audioNodes={audioNodesTwo}
-            playing={twoPlaying}
+            play={(state: boolean) => setTwoPlaying(state)}
             handleSongEnd={() => handlePlayerTwoSongEnd()}
             file={playerFileTwo}
           />
