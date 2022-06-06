@@ -1,5 +1,5 @@
 import { Slider } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import EqNode from './EqNode';
 
 export interface EQSliderProps{
@@ -8,6 +8,11 @@ export interface EQSliderProps{
 
 function EQSlider({ eqNode }:EQSliderProps) {
   const [lowerBandThreshold, setLowerBandThreshold] = useState(0);
+  useEffect(() => {
+    if (eqNode) {
+      setLowerBandThreshold(eqNode.getGain());
+    }
+  }, [eqNode?.getGain()]);
   return (
     <Slider
       value={lowerBandThreshold}
