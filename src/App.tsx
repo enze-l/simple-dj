@@ -103,7 +103,7 @@ function App() {
               />
             </div>
           </div>
-          <div className="h-40 bg-gray-600">
+          <div className="h-40 bg-gray-700">
             <Waveform
               toggle={togglePlayerOne}
               audioContext={audioContext}
@@ -114,7 +114,7 @@ function App() {
               close={togglePLayerOneClose}
             />
           </div>
-          <div className="h-40 bg-gray-600">
+          <div className="h-40 bg-gray-700">
             <Waveform
               toggle={togglePlayerTwo}
               audioContext={audioContext}

@@ -52,7 +52,7 @@ function Waveform({
           scrollParent: true,
           minPxPerSec: 100,
           barWidth: 1,
-          height: 160,
+          height: 158,
           hideScrollbar: true,
         });
 
