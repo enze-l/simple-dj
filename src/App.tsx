@@ -43,11 +43,12 @@ function App() {
   }
 
   const handleFileUpload = (e: any) => {
-    if (e.target.files[0]) {
-      const newArray = [...files];
-      newArray.push(e.target.files[0]);
-      setFiles(newArray);
+    const filesList = e.target.files;
+    const array = [...files];
+    for (let i = 0; i < filesList.length; i += 1) {
+      array.push(e.target.files[i]);
     }
+    setFiles(array);
   };
 
   const handleSongItemClicked = (index: number) => {
@@ -127,7 +128,10 @@ function App() {
           </div>
         </div>
         <div className="flex-none w-96">
-          <input onChange={handleFileUpload} id="audio" type="file" accept="audio/*" />
+          <div className="grid content-center h-28 bg-gray-500 center-items">
+            <p className="justify-self-center">Drop files or click for Upload</p>
+            <input type="file" className="opacity-0 h-28 absolute" onChange={handleFileUpload} multiple id="audio" accept="audio/*" />
+          </div>
           <ul>
             {files.map((file, index) => (
               <div onKeyDown={() => handleSongItemClicked(index)} role="button" tabIndex={index} onClick={() => handleSongItemClicked(index)}>
