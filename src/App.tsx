@@ -48,9 +48,9 @@ function App() {
   };
 
   return (
-    <div className="grid grid-cols-5">
-      <div className="col-span-4 grid min-h-screen">
-        <div className="grid grid-cols-2 items-center">
+    <div className="flex bg-gray-600">
+      <div className="grow h-screen flex flex-col">
+        <div className="grow grid grid-cols-2 items-center">
           <SoundControl
             audioContext={audioContext}
             setAudioNodes={(node: AudioNode[]) => setAudioNodesOne(node)}
@@ -70,21 +70,22 @@ function App() {
             handlePlayerClose={() => handlePlayerTwoSongEnd()}
           />
         </div>
-        <Slider
-          value={volume}
-          min={0}
-          max={2}
-          step={0.01}
-          marks={[{ value: 1 }]}
-          track={false}
-          className="col-span-2"
-          onChange={(e, value) => {
-            if (typeof value === 'number') {
-              setVolume(value);
-            }
-          }}
-        />
-        <div className="col-span-2">
+        <div className="h-24 w-2/3 self-center">
+          <Slider
+            value={volume}
+            min={0}
+            max={2}
+            step={0.01}
+            marks={[{ value: 1 }]}
+            track={false}
+            onChange={(e, value) => {
+              if (typeof value === 'number') {
+                setVolume(value);
+              }
+            }}
+          />
+        </div>
+        <div className="h-40">
           <Waveform
             toggle={togglePlayerOne}
             audioContext={audioContext}
@@ -95,7 +96,7 @@ function App() {
             close={togglePLayerOneClose}
           />
         </div>
-        <div className="col-span-2">
+        <div className="h-40">
           <Waveform
             toggle={togglePlayerTwo}
             audioContext={audioContext}
@@ -107,7 +108,7 @@ function App() {
           />
         </div>
       </div>
-      <div>
+      <div className="flex-none w-96 bg-gray-700 shadow-xl shadow-gray-800">
         <input onChange={handleFileUpload} id="audio" type="file" accept="audio/*" />
         <ul>
           {files.map((file, index) => (
