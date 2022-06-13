@@ -75,17 +75,19 @@ function SoundControl({
   return (
     <div className={file ? 'visible' : 'invisible'}>
       <FrequencyVisualizer analyserNode={analyserNode.current}>
-        <div className="flex flex-col items-end">
-          <IconButton onClick={closePlayer} className="items-end"><Close /></IconButton>
-        </div>
-        <div className="flex flex-col items-center">
-          <p>{formate(file?.name)}</p>
-          <IconButton onClick={togglePlay}>{file && playButton}</IconButton>
-        </div>
-        <div className="flex justify-center h-40">
-          <EQSlider eqNode={lowNode.current} />
-          <EQSlider eqNode={midNode.current} />
-          <EQSlider eqNode={highNode.current} />
+        <div className="w-96 h-96 bg-gray-400 shadow-lg shadow-gray-900">
+          <div className="flex flex-col items-end">
+            <IconButton onClick={closePlayer} className="items-end"><Close /></IconButton>
+          </div>
+          <div className="flex flex-col items-center pt-8">
+            <p>{formate(file?.name)}</p>
+            <IconButton onClick={togglePlay}>{file && playButton}</IconButton>
+          </div>
+          <div className="flex justify-center h-40">
+            <EQSlider eqNode={lowNode.current} />
+            <EQSlider eqNode={midNode.current} />
+            <EQSlider eqNode={highNode.current} />
+          </div>
         </div>
       </FrequencyVisualizer>
     </div>

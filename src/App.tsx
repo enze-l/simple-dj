@@ -129,7 +129,7 @@ function App() {
         </div>
         <div className="flex-none w-96 overflow-auto max-h-screen">
           <div className="grid content-center z-10 hover:bg-gray-400 h-28 bg-gray-500 center-items">
-            <p className="justify-self-center">Drop files or click for Upload</p>
+            <p className="justify-self-center text-xl text-gray-800">Drop files or click for Upload</p>
             <input type="file" className="opacity-0 h-28 absolute" onChange={handleFileUpload} multiple id="audio" accept="audio/*" />
           </div>
           <ul>

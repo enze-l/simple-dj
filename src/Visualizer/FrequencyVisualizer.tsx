@@ -2,7 +2,7 @@ import React, { createRef } from 'react';
 
 interface BackgroundProps{
   analyserNode: AnalyserNode | undefined
-  children: any[]
+  children: any
 }
 
 function FrequencyVisualizer({ analyserNode, children }: BackgroundProps) {
