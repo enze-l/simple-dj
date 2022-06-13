@@ -104,7 +104,7 @@ function App() {
               />
             </div>
           </div>
-          <div className="h-40 bg-gray-700">
+          <div className="h-40 bg-gray-900">
             <Waveform
               toggle={togglePlayerOne}
               audioContext={audioContext}
@@ -115,7 +115,7 @@ function App() {
               close={togglePLayerOneClose}
             />
           </div>
-          <div className="h-40 bg-gray-700">
+          <div className="h-40 bg-gray-900">
             <Waveform
               toggle={togglePlayerTwo}
               audioContext={audioContext}
@@ -127,7 +127,7 @@ function App() {
             />
           </div>
         </div>
-        <div className="flex-none w-96">
+        <div className="flex-none w-96 overflow-auto max-h-screen">
           <div className="grid content-center h-28 bg-gray-500 center-items">
             <p className="justify-self-center">Drop files or click for Upload</p>
             <input type="file" className="opacity-0 h-28 absolute" onChange={handleFileUpload} multiple id="audio" accept="audio/*" />

@@ -4,6 +4,7 @@ import { Close, Pause, PlayArrow } from '@mui/icons-material/';
 import EqNode from './Equalizer/EqNode';
 import FrequencyVisualizer from './Visualizer/FrequencyVisualizer';
 import EQSlider from './Equalizer/EQSlider';
+import formate from './Visualizer/FileNameFormater';
 
 export interface AudioPlayerProps {
     audioContext: AudioContext | undefined;
@@ -78,7 +79,7 @@ function SoundControl({
           <IconButton onClick={closePlayer} className="items-end"><Close /></IconButton>
         </div>
         <div className="flex flex-col items-center">
-          <p>{file?.name}</p>
+          <p>{formate(file?.name)}</p>
           <IconButton onClick={togglePlay}>{file && playButton}</IconButton>
         </div>
         <div className="flex justify-center h-40">
