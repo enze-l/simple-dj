@@ -16,7 +16,7 @@ function FrequencyVisualizer({ analyserNode, children }: BackgroundProps) {
     y:number,
     size:number,
   ) => {
-    const radgrad = context.createRadialGradient(x, y, 0, x, y, size);
+    const radgrad = context.createRadialGradient(x, y, 0, x, y, size * 2);
     radgrad.addColorStop(0, colorInner);
     radgrad.addColorStop(1, colorOuter);
     context.fillStyle = radgrad;
@@ -32,13 +32,13 @@ function FrequencyVisualizer({ analyserNode, children }: BackgroundProps) {
     let midFrequencies = 128;
     let highFrequencies = 128;
 
-    const canvasSquareSize = 500;
-
     if (canvas.current) {
       const context = canvas.current.getContext('2d');
 
       canvas.current.style.width = '100%';
       canvas.current.style.height = '100%';
+      canvas.current.width = canvas.current.offsetWidth;
+      canvas.current.height = canvas.current.offsetHeight;
 
       if (context) {
         context.globalCompositeOperation = 'lighten';
@@ -53,12 +53,12 @@ function FrequencyVisualizer({ analyserNode, children }: BackgroundProps) {
           highFrequencies = getAverage(frequencyArray.slice(900, 1000));
         }
 
-        const halfPosition = canvasSquareSize / 2;
-        const thirdPosition = canvasSquareSize / 3;
+        const centerY = canvas.current.height / 2;
+        const centerX = canvas.current.width / 2;
 
-        drawCircle(context, 'rgb(255, 0, 0)', 'rgba(255,0,0,0)', thirdPosition, thirdPosition * 2, highFrequencies);
-        drawCircle(context, 'rgb(0,255,0)', 'rgba(0,255,0,0)', halfPosition, thirdPosition, midFrequencies);
-        drawCircle(context, 'rgb(0, 0, 255)', 'rgba(0,0,255,0)', thirdPosition * 2, thirdPosition * 2, lowFrequencies);
+        drawCircle(context, 'rgb(255, 0, 0)', 'rgba(255,0,0,0)', centerX + 30, centerY + 10, highFrequencies);
+        drawCircle(context, 'rgb(0,255,0)', 'rgba(0,255,0,0)', centerX - 30, centerY + 10, midFrequencies);
+        drawCircle(context, 'rgb(0, 0, 255)', 'rgba(0,0,255,0)', centerX, centerY - 20, lowFrequencies);
       }
     }
   };
@@ -71,7 +71,7 @@ function FrequencyVisualizer({ analyserNode, children }: BackgroundProps) {
   requestAnimationFrame(tick);
 
   return (
-    <div className="flex justify-center items-center h-full">
+    <div className="flex justify-center items-center h-full shadow-inner shadow-gray-800">
       <div className="absolute">
         {children}
       </div>

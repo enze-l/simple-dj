@@ -9,7 +9,7 @@ function SongListItem({ file }: AudioPlayerProps) {
   const name = formate(file?.name);
 
   return (
-    file ? <li className="text-gray-300 hover:bg-gray-700 p-3">{file ? name : undefined}</li> : <div />
+    file ? <li className="text-gray-300 p-3">{file ? name : undefined}</li> : <div />
   );
 }
 

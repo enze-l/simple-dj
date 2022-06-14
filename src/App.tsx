@@ -1,8 +1,9 @@
 import {
-  createTheme, Slider, ThemeProvider,
+  createTheme, IconButton, Slider, ThemeProvider,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { grey } from '@mui/material/colors';
+import { Close } from '@mui/icons-material';
 import SoundControl from './SoundControl';
 import SongListItem from './SongListItem';
 import Waveform from './Visualizer/Waveform';
@@ -19,7 +20,7 @@ const theme = createTheme({
 });
 
 function App() {
-  const [files, setFiles] = useState<Array<File | undefined>>([undefined]);
+  const [files, setFiles] = useState<Array<File | undefined>>([]);
   const [audioNodesOne, setAudioNodesOne] = useState<AudioNode[] | undefined>();
   const [audioNodesTwo, setAudioNodesTwo] = useState<AudioNode[] | undefined>();
   const [playerFileOne, setPlayerFileOne] = useState<File>();
@@ -60,6 +61,12 @@ function App() {
         setPlayerFileTwo(file);
       }
     }
+  };
+
+  const handleSongItemClosed = (index: number) => {
+    const array = [...files];
+    array.splice(index, 1);
+    setFiles(array);
   };
 
   return (
@@ -127,15 +134,20 @@ function App() {
             />
           </div>
         </div>
-        <div className="flex-none w-96 overflow-auto max-h-screen">
+        <div className="flex-none w-96 overflow-auto max-h-screen scrollbar-hide">
           <div className="grid content-center z-10 hover:bg-gray-400 h-28 bg-gray-500 center-items">
             <p className="justify-self-center text-xl text-gray-800">Drop files or click for Upload</p>
             <input type="file" className="opacity-0 h-28 absolute" onChange={handleFileUpload} multiple id="audio" accept="audio/*" />
           </div>
           <ul>
             {files.map((file, index) => (
-              <div onKeyDown={() => handleSongItemClicked(index)} role="button" tabIndex={index} onClick={() => handleSongItemClicked(index)}>
-                <SongListItem file={file} />
+              <div className="flex hover:bg-gray-700">
+                <div className="grow" role="button" tabIndex={index} onKeyDown={() => handleSongItemClicked(index)} onClick={() => handleSongItemClicked(index)}>
+                  <SongListItem file={file} />
+                </div>
+                <IconButton onClick={() => handleSongItemClosed(index)}>
+                  <Close color="secondary" />
+                </IconButton>
                 <hr style={{ borderColor: '#666c75' }} />
               </div>
             ))}

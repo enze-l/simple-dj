@@ -5,5 +5,8 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    // eslint-disable-next-line global-require
+    require('tailwind-scrollbar-hide'),
+  ],
 };
