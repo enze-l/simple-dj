@@ -76,7 +76,7 @@ function SoundControl({
   return (
     <div className={file ? 'visible h-full' : 'invisible'}>
       <FrequencyVisualizer analyserNode={analyserNode.current} color={color}>
-        <div className="w-96 h-96 bg-gray-400 shadow-lg shadow-gray-900">
+        <div className="w-96 h-96 bg-gray-300 shadow-lg shadow-gray-900">
           <div className="flex flex-col items-end">
             <IconButton onClick={closePlayer} className="items-end"><Close /></IconButton>
           </div>
