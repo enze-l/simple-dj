@@ -9,10 +9,11 @@ interface WaveformProps{
   play: any;
   toggle: number;
   close: number;
+  color: string
 }
 
 function Waveform({
-  audioNodes, toggle, close, audioContext, play, file, handleSongEnd,
+  audioNodes, toggle, close, audioContext, play, file, handleSongEnd, color,
 }: WaveformProps) {
   const waveformRef = useRef<any>();
   const wavesurfer = useRef<WaveSurfer>();
@@ -27,15 +28,6 @@ function Waveform({
     play(false);
     wavesurfer.current?.destroy();
   }, [close]);
-
-  function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i += 1) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
 
   useEffect(() => {
     if (file) {
@@ -56,7 +48,7 @@ function Waveform({
           hideScrollbar: true,
         });
 
-        wavesurfer.current?.setBackgroundColor(getRandomColor());
+        wavesurfer.current?.setBackgroundColor(color);
 
         const audioElement = new Audio(URL.createObjectURL(file));
         wavesurfer.current.load(audioElement);

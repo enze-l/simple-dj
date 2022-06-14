@@ -1,11 +1,14 @@
 import React, { createRef } from 'react';
 
+const tinyColor = require('tinycolor2');
+
 interface BackgroundProps{
   analyserNode: AnalyserNode | undefined
   children: any
+  color: string
 }
 
-function FrequencyVisualizer({ analyserNode, children }: BackgroundProps) {
+function FrequencyVisualizer({ analyserNode, children, color }: BackgroundProps) {
   const canvas = createRef<HTMLCanvasElement>();
 
   const drawCircle = (
@@ -56,9 +59,17 @@ function FrequencyVisualizer({ analyserNode, children }: BackgroundProps) {
         const centerY = canvas.current.height / 2;
         const centerX = canvas.current.width / 2;
 
-        drawCircle(context, 'rgb(255, 0, 0)', 'rgba(255,0,0,0)', centerX + 30, centerY + 10, highFrequencies);
-        drawCircle(context, 'rgb(0,255,0)', 'rgba(0,255,0,0)', centerX - 30, centerY + 10, midFrequencies);
-        drawCircle(context, 'rgb(0, 0, 255)', 'rgba(0,0,255,0)', centerX, centerY - 20, lowFrequencies);
+        const primaryColor = tinyColor(color).setAlpha(0);
+
+        const spinAmount = 60;
+
+        const color2 = primaryColor.toRgbString();
+        const color3 = primaryColor.spin(spinAmount).toRgbString();
+        const color4 = primaryColor.spin(-spinAmount).toRgbString();
+
+        drawCircle(context, color, color2, centerX + 40, centerY + 10, highFrequencies);
+        drawCircle(context, color, color3, centerX - 40, centerY + 10, midFrequencies);
+        drawCircle(context, color, color4, centerX, centerY - 30, lowFrequencies);
       }
     }
   };

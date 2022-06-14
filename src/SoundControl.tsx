@@ -14,10 +14,11 @@ export interface AudioPlayerProps {
     playing: boolean;
     togglePlay: any;
     handlePlayerClose: any;
+    color: string,
 }
 
 function SoundControl({
-  setAudioNodes, file, togglePlay, handlePlayerClose, audioContext, volume, playing,
+  setAudioNodes, file, togglePlay, handlePlayerClose, audioContext, volume, playing, color,
 }: AudioPlayerProps) {
   const [playButton, setPlayButton] = useState(<PlayArrow />);
 
@@ -74,14 +75,16 @@ function SoundControl({
 
   return (
     <div className={file ? 'visible h-full' : 'invisible'}>
-      <FrequencyVisualizer analyserNode={analyserNode.current}>
+      <FrequencyVisualizer analyserNode={analyserNode.current} color={color}>
         <div className="w-96 h-96 bg-gray-400 shadow-lg shadow-gray-900">
           <div className="flex flex-col items-end">
             <IconButton onClick={closePlayer} className="items-end"><Close /></IconButton>
           </div>
-          <div className="flex flex-col items-center pt-8">
+          <div className="flex flex-col items-center pt-6">
             <p>{formate(file?.name)}</p>
-            <IconButton onClick={togglePlay}>{file && playButton}</IconButton>
+            <div className="pt-2 pb-3">
+              <IconButton onClick={togglePlay}>{file && playButton}</IconButton>
+            </div>
           </div>
           <div className="flex justify-center h-40">
             <EQSlider eqNode={lowNode.current} />

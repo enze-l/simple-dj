@@ -7,6 +7,7 @@ import { Close } from '@mui/icons-material';
 import SoundControl from './SoundControl';
 import SongListItem from './SongListItem';
 import Waveform from './Visualizer/Waveform';
+import getRandomColor from './Visualizer/RandomColor';
 
 const theme = createTheme({
   palette: {
@@ -25,6 +26,8 @@ function App() {
   const [audioNodesTwo, setAudioNodesTwo] = useState<AudioNode[] | undefined>();
   const [playerFileOne, setPlayerFileOne] = useState<File>();
   const [playerFileTwo, setPlayerFileTwo] = useState<File>();
+  const [colorPlayerOne, setColorPlayerOne] = useState<string>(getRandomColor());
+  const [colorPlayerTwo, setColorPlayerTwo] = useState<string>(getRandomColor());
   const [volume, setVolume] = useState(1);
   const [audioContext] = useState(new AudioContext());
   const [onePlaying, setOnePlaying] = useState(false);
@@ -37,10 +40,12 @@ function App() {
   function handlePlayerOneSongEnd() {
     setTogglePlayerOneClose(togglePLayerOneClose + 1);
     setPlayerFileOne(undefined);
+    setColorPlayerOne(getRandomColor());
   }
   function handlePlayerTwoSongEnd() {
     setPlayerFileTwo(undefined);
     setTogglePlayerTwoClose(togglePLayerTwoClose + 1);
+    setColorPlayerTwo(getRandomColor());
   }
 
   const handleFileUpload = (e: any) => {
@@ -82,6 +87,7 @@ function App() {
               file={playerFileOne}
               togglePlay={() => setTogglePlayerOne(togglePlayerOne + 1)}
               handlePlayerClose={() => handlePlayerOneSongEnd()}
+              color={colorPlayerOne}
             />
             <SoundControl
               audioContext={audioContext}
@@ -91,6 +97,7 @@ function App() {
               file={playerFileTwo}
               togglePlay={() => setTogglePlayerTwo(togglePlayerTwo + 1)}
               handlePlayerClose={() => handlePlayerTwoSongEnd()}
+              color={colorPlayerTwo}
             />
           </div>
           <div className="w-full flex place-content-center">
@@ -120,6 +127,7 @@ function App() {
               handleSongEnd={() => handlePlayerOneSongEnd()}
               file={playerFileOne}
               close={togglePLayerOneClose}
+              color={colorPlayerOne}
             />
           </div>
           <div className="h-40 bg-gray-900">
@@ -131,6 +139,7 @@ function App() {
               handleSongEnd={() => handlePlayerTwoSongEnd()}
               file={playerFileTwo}
               close={togglePLayerTwoClose}
+              color={colorPlayerTwo}
             />
           </div>
         </div>
@@ -148,7 +157,6 @@ function App() {
                 <IconButton onClick={() => handleSongItemClosed(index)}>
                   <Close color="secondary" />
                 </IconButton>
-                <hr style={{ borderColor: '#666c75' }} />
               </div>
             ))}
           </ul>
