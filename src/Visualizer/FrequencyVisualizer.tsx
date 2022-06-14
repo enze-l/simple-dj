@@ -37,8 +37,8 @@ function FrequencyVisualizer({ analyserNode, children }: BackgroundProps) {
     if (canvas.current) {
       const context = canvas.current.getContext('2d');
 
-      canvas.current.width = canvasSquareSize;
-      canvas.current.height = canvasSquareSize;
+      canvas.current.style.width = '100%';
+      canvas.current.style.height = '100%';
 
       if (context) {
         context.globalCompositeOperation = 'lighten';
@@ -71,7 +71,7 @@ function FrequencyVisualizer({ analyserNode, children }: BackgroundProps) {
   requestAnimationFrame(tick);
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center h-full">
       <div className="absolute">
         {children}
       </div>
