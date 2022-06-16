@@ -30,6 +30,84 @@ export default function detect(buffer) {
   );
 }
 
+export function getPeaks(data) {
+  var partSize = 22050,
+      parts = data[0].length / partSize,
+      peaks = [];
+
+  for (var i = 0; i < parts; i++) {
+    var max = 0;
+    for (var j = i * partSize; j < (i + 1) * partSize; j++) {
+      var volume = Math.max(Math.abs(data[0][j]), Math.abs(data[1][j]));
+      if (!max || (volume > max.volume)) {
+        max = {
+          position: j,
+          volume: volume
+        };
+      }
+    }
+    peaks.push(max);
+  }
+
+  // We then sort the peaks according to volume...
+
+  peaks.sort(function(a, b) {
+    return b.volume - a.volume;
+  });
+
+  // ...take the loundest half of those...
+
+  peaks = peaks.splice(0, peaks.length * 0.5);
+
+  // ...and re-sort it back based on position.
+
+  peaks.sort(function(a, b) {
+    return a.position - b.position;
+  });
+
+  return peaks;
+}
+
+export function getIntervals(peaks) {
+
+  // What we now do is get all of our peaks, and then measure the distance to
+  // other peaks, to create intervals.  Then based on the distance between
+  // those peaks (the distance of the intervals) we can calculate the BPM of
+  // that particular interval.
+
+  // The interval that is seen the most should have the BPM that corresponds
+  // to the track itself.
+
+  var groups = [];
+
+  peaks.forEach(function(peak, index) {
+    for (var i = 1; (index + i) < peaks.length && i < 10; i++) {
+      var group = {
+        tempo: (60 * 44100) / (peaks[index + i].position - peak.position),
+        firstPos: peak.position,
+        count: 1
+      };
+
+      while (group.tempo < 90) {
+        group.tempo *= 2;
+      }
+
+      while (group.tempo > 180) {
+        group.tempo /= 2;
+      }
+
+      group.tempo = Math.round(group.tempo);
+
+      if (!(groups.some(function(interval) {
+        return (interval.tempo === group.tempo ? interval.count++ : 0);
+      }))) {
+        groups.push(group);
+      }
+    }
+  });
+  return groups;
+}
+
 /**
  * Sort results by count and return top candidate
  * @param  {Object} Candidate
@@ -82,7 +160,7 @@ function getLowPassSource(buffer) {
  * @return {Array}      Peaks found that are greater than the threshold
  */
 
-function findPeaks(data) {
+export function findPeaks(data) {
   let peaks = [];
   let threshold = 0.9;
   const minThresold = 0.3;
@@ -146,7 +224,7 @@ function findPeaksAtThreshold(data, threshold) {
  * @return {Array}       Identifies intervals between peaks
  */
 
-function identifyIntervals(peaks) {
+export function identifyIntervals(peaks) {
   const intervals = [];
 
   peaks.forEach((peak, index) => {
@@ -185,7 +263,7 @@ function identifyIntervals(peaks) {
  * @return {Function}
  */
 
-function groupByTempo(sampleRate) {
+export function groupByTempo(sampleRate) {
   /**
      * Figure out best possible tempo candidates
      * @param  {Array} intervalCounts List of identified intervals

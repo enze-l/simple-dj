@@ -1,4 +1,5 @@
 import {
+  Button,
   createTheme, IconButton, Slider, ThemeProvider,
 } from '@mui/material';
 import React, { useState } from 'react';
@@ -17,6 +18,9 @@ const theme = createTheme({
     secondary: {
       main: grey[300],
     },
+    warning: {
+      main: 'rgba(155,162,174,0.24)',
+    },
   },
 });
 
@@ -24,6 +28,8 @@ function App() {
   const [files, setFiles] = useState<Array<File | undefined>>([]);
   const [audioNodesOne, setAudioNodesOne] = useState<AudioNode[] | undefined>();
   const [audioNodesTwo, setAudioNodesTwo] = useState<AudioNode[] | undefined>();
+  const [bpmOne, setBpmOne] = useState<undefined | Number>(undefined);
+  const [bpmTwo, setBpmTwo] = useState<undefined | Number>(undefined);
   const [playerFileOne, setPlayerFileOne] = useState<File>();
   const [playerFileTwo, setPlayerFileTwo] = useState<File>();
   const [colorPlayerOne, setColorPlayerOne] = useState<string>(getRandomColor());
@@ -101,7 +107,7 @@ function App() {
             />
           </div>
           <div className="w-full flex place-content-center">
-            <div className="pb-7 pt-8 w-2/3">
+            <div className="pt-4 pb-3 w-2/3">
               <Slider
                 color="secondary"
                 value={volume}
@@ -118,6 +124,13 @@ function App() {
               />
             </div>
           </div>
+          <div className="flex text-gray-500 py-3 place-content-center">
+            <div className="grid grid-cols-3 w-2/3">
+              <p className="pt-1">{bpmOne && `Bpm: ${bpmOne}`}</p>
+              <Button color="secondary">BPM</Button>
+              <p className="pt-1 justify-self-end">{bpmTwo && `Bpm: ${bpmTwo}`}</p>
+            </div>
+          </div>
           <div className="h-40 bg-gray-900">
             <Waveform
               toggle={togglePlayerOne}
@@ -128,6 +141,8 @@ function App() {
               file={playerFileOne}
               close={togglePLayerOneClose}
               color={colorPlayerOne}
+              setBpm={(bpm: number|undefined) => setBpmOne(bpm)}
+              isTop
             />
           </div>
           <div className="h-40 bg-gray-900">
@@ -140,6 +155,8 @@ function App() {
               file={playerFileTwo}
               close={togglePLayerTwoClose}
               color={colorPlayerTwo}
+              setBpm={(bpm: number|undefined) => setBpmTwo(bpm)}
+              isTop={false}
             />
           </div>
         </div>
@@ -155,7 +172,7 @@ function App() {
                   <SongListItem file={file} />
                 </div>
                 <IconButton onClick={() => handleSongItemClosed(index)}>
-                  <Close color="secondary" />
+                  <Close color="warning" />
                 </IconButton>
               </div>
             ))}

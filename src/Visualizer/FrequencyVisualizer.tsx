@@ -51,9 +51,9 @@ function FrequencyVisualizer({ analyserNode, children, color }: BackgroundProps)
           const frequencyArray = new Uint8Array(analyserNode.frequencyBinCount);
           analyserNode?.getByteTimeDomainData(frequencyArray);
 
-          lowFrequencies = getAverage(frequencyArray.slice(0, 50));
-          midFrequencies = getAverage(frequencyArray.slice(50, 100));
-          highFrequencies = getAverage(frequencyArray.slice(900, 1000));
+          lowFrequencies = getAverage(frequencyArray.slice(0, 350));
+          midFrequencies = getAverage(frequencyArray.slice(350, 650));
+          highFrequencies = getAverage(frequencyArray.slice(650, 1000));
         }
 
         const centerY = canvas.current.height / 2;
