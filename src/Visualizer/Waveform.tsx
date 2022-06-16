@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import WaveSurfer from 'wavesurfer.js';
+import detect from './BPMDetective';
 
 interface WaveformProps{
   audioContext: AudioContext;
@@ -49,7 +50,9 @@ function Waveform({
 
         wavesurfer.current?.setBackgroundColor(color);
 
-        const audioElement = new Audio(URL.createObjectURL(file));
+        const fileURL = URL.createObjectURL(file);
+        const audioElement = new Audio(fileURL);
+
         wavesurfer.current.load(audioElement);
         if (audioNodes) {
           wavesurfer.current?.backend.setFilters(audioNodes);
@@ -62,6 +65,16 @@ function Waveform({
         });
         wavesurfer.current.on('finish', () => {
           handleSongEnd();
+        });
+
+        fetch(fileURL).then(async (response) => {
+          const buffer = await response.arrayBuffer();
+          const data: AudioBuffer = await new Promise((resolve, reject) => {
+            audioContext.decodeAudioData(buffer, resolve, reject);
+          });
+
+          const bpm = detect(data);
+          console.log(`Bpm = ${bpm}`);
         });
       }
     }
