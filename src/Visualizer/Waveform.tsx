@@ -58,20 +58,23 @@ function Waveform({
 
           const markerPositions = isTop ? 'bottom' : 'top';
 
-          const markersParams: MarkerParams[] = [{
-            time: firstPos,
-            color: '#ff0000',
-          }];
-          for (let beat = 0; beat * BeatTimeIntervall < data.duration; beat += 1) {
-            markersParams.push({
-              time: BeatTimeIntervall * beat,
+          const markers: MarkerParams[] = [];
+          for (let position = firstPos; position < data.duration; position += BeatTimeIntervall) {
+            markers.push({
+              time: position,
               color: 'rgba(31,40,55,0.5)',
               position: markerPositions,
             });
           }
-          const markersPlugin = MarkersPlugin.create({
-            markers: markersParams,
-          });
+          for (let position = firstPos; position > 0; position -= BeatTimeIntervall) {
+            markers.push({
+              time: position,
+              color: 'rgba(31,40,55,0.5)',
+              position: markerPositions,
+            });
+          }
+
+          const markersPlugin = MarkersPlugin.create({ markers });
 
           wavesurfer.current = WaveSurfer.create({
             container: waveformRef.current,
