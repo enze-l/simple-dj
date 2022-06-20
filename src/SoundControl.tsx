@@ -6,8 +6,6 @@ import FrequencyVisualizer from './Visualizer/FrequencyVisualizer';
 import EQSlider from './Equalizer/EQSlider';
 import formate from './Visualizer/FileNameFormater';
 
-const PitchShift = require('soundbank-pitch-shift');
-
 export interface AudioPlayerProps {
     audioContext: AudioContext | undefined;
     setAudioNodes: any;
@@ -29,7 +27,6 @@ function SoundControl({
   const midNode = useRef<EqNode>();
   const highNode = useRef<EqNode>();
   const analyserNode = useRef<AnalyserNode>();
-  const pitchShiftNode = useRef();
 
   const setVolume = (value: number) => {
     if (gainNode.current) {
@@ -60,11 +57,6 @@ function SoundControl({
       midNode.current = new EqNode(audioContext, 'peaking', 1000);
       highNode.current = new EqNode(audioContext, 'highshelf', 3200);
       analyserNode.current = new AnalyserNode(audioContext);
-      pitchShiftNode.current = new PitchShift(audioContext);
-      if (pitchShiftNode.current) {
-        // @ts-ignore
-        pitchShiftNode.current.transpose = -1.2;
-      }
 
       setVolume(volume);
       lowNode.current?.setGain(0);
@@ -77,7 +69,6 @@ function SoundControl({
         midNode.current?.getNode(),
         highNode.current?.getNode(),
         analyserNode.current,
-        pitchShiftNode.current,
       ]);
     }
   }, [file, audioContext]);
