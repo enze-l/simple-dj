@@ -54,25 +54,25 @@ function Waveform({
 
           const firstPos = top[0].firstPos / data.sampleRate;
 
-          const BeatTimeIntervall = 60 / currentBpm;
+          const BeatInterval = 60 / currentBpm;
 
           const markerPositions = isTop ? 'bottom' : 'top';
 
           const markers: MarkerParams[] = [];
-          for (let position = firstPos; position < data.duration; position += BeatTimeIntervall) {
+          const positions: number[] = [];
+          for (let position = firstPos; position < data.duration; position += BeatInterval) {
+            positions.push(position);
+          }
+          for (let position = firstPos - BeatInterval; position > 0; position -= BeatInterval) {
+            positions.push(position);
+          }
+          positions.forEach((position) => {
             markers.push({
               time: position,
               color: 'rgba(31,40,55,0.5)',
               position: markerPositions,
             });
-          }
-          for (let position = firstPos; position > 0; position -= BeatTimeIntervall) {
-            markers.push({
-              time: position,
-              color: 'rgba(31,40,55,0.5)',
-              position: markerPositions,
-            });
-          }
+          });
 
           const markersPlugin = MarkersPlugin.create({ markers });
 

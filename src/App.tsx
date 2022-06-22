@@ -2,7 +2,7 @@ import {
   Button,
   createTheme, IconButton, Slider, ThemeProvider,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { grey } from '@mui/material/colors';
 import { Close } from '@mui/icons-material';
 import SoundControl from './SoundControl';
@@ -28,8 +28,9 @@ function App() {
   const [files, setFiles] = useState<Array<File | undefined>>([]);
   const [audioNodesOne, setAudioNodesOne] = useState<AudioNode[] | undefined>();
   const [audioNodesTwo, setAudioNodesTwo] = useState<AudioNode[] | undefined>();
-  const [bpmOne, setBpmOne] = useState<undefined | Number>(undefined);
-  const [bpmTwo, setBpmTwo] = useState<undefined | Number>(undefined);
+  const [primaryBpm, setPrimaryBpm] = useState<number | undefined>(undefined);
+  const [bpmOne, setBpmOne] = useState<undefined | number>(undefined);
+  const [bpmTwo, setBpmTwo] = useState<undefined | number>(undefined);
   const [playerFileOne, setPlayerFileOne] = useState<File>();
   const [playerFileTwo, setPlayerFileTwo] = useState<File>();
   const [colorPlayerOne, setColorPlayerOne] = useState<string>(getRandomColor());
@@ -80,6 +81,27 @@ function App() {
     setFiles(array);
   };
 
+  const refreshPrimaryBpm = (bpm: number | undefined) => {
+    if (bpm) {
+      if (!primaryBpm) {
+        setPrimaryBpm(bpm);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!bpmOne && !bpmTwo) {
+      setPrimaryBpm(undefined);
+    }
+    if ((!onePlaying && !twoPlaying) && (!bpmOne !== !bpmTwo)) {
+      if (bpmOne) {
+        setPrimaryBpm(bpmOne);
+      } else {
+        setPrimaryBpm(bpmTwo);
+      }
+    }
+  }, [primaryBpm, bpmOne, bpmTwo]);
+
   return (
     <ThemeProvider theme={theme}>
       <div className="flex bg-gray-800 divide-x divide-gray-600">
@@ -127,7 +149,7 @@ function App() {
           <div className="flex text-gray-500 py-3 place-content-center">
             <div className="grid grid-cols-3 w-2/3">
               <p className="pt-1">{bpmOne && `Bpm: ${bpmOne}`}</p>
-              <Button color="secondary">BPM</Button>
+              <Button color="secondary">{`BPM ${primaryBpm}`}</Button>
               <p className="pt-1 justify-self-end">{bpmTwo && `Bpm: ${bpmTwo}`}</p>
             </div>
           </div>
@@ -141,7 +163,10 @@ function App() {
               file={playerFileOne}
               close={togglePLayerOneClose}
               color={colorPlayerOne}
-              setBpm={(bpm: number|undefined) => setBpmOne(bpm)}
+              setBpm={(bpm: number|undefined) => {
+                refreshPrimaryBpm(bpm);
+                setBpmOne(bpm);
+              }}
               isTop
             />
           </div>
@@ -155,7 +180,10 @@ function App() {
               file={playerFileTwo}
               close={togglePLayerTwoClose}
               color={colorPlayerTwo}
-              setBpm={(bpm: number|undefined) => setBpmTwo(bpm)}
+              setBpm={(bpm: number|undefined) => {
+                refreshPrimaryBpm(bpm);
+                setBpmTwo(bpm);
+              }}
               isTop={false}
             />
           </div>
