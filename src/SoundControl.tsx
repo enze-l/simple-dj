@@ -30,7 +30,7 @@ function SoundControl({
 
   const setVolume = (value: number) => {
     if (gainNode.current) {
-      gainNode.current.gain.value = Math.min(value, 1);
+      gainNode.current.gain.value = Math.min(value, 0.8);
     }
   };
 

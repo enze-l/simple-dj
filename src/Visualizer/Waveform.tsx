@@ -14,18 +14,22 @@ interface WaveformProps{
   close: number;
   color: string;
   isTop: boolean;
+  playbackSpeed: number;
 }
 
 function Waveform({
-  audioNodes, setBpm, isTop, toggle, close, audioContext, play, file, handleSongEnd, color,
+  audioNodes, setBpm, isTop, toggle, close, audioContext,
+  play, file, handleSongEnd, color, playbackSpeed,
 }: WaveformProps) {
   const waveformRef = useRef<any>();
   const wavesurfer = useRef<WaveSurfer>();
 
   useEffect(() => {
-    if (wavesurfer.current) {
-      wavesurfer.current?.playPause();
-    }
+    wavesurfer.current?.setPlaybackRate(playbackSpeed);
+  }, [playbackSpeed]);
+
+  useEffect(() => {
+    wavesurfer.current?.playPause();
   }, [toggle]);
 
   useEffect(() => {

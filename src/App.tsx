@@ -1,5 +1,4 @@
 import {
-  Button,
   createTheme, IconButton, Slider, ThemeProvider,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
@@ -28,7 +27,7 @@ function App() {
   const [files, setFiles] = useState<Array<File | undefined>>([]);
   const [audioNodesOne, setAudioNodesOne] = useState<AudioNode[] | undefined>();
   const [audioNodesTwo, setAudioNodesTwo] = useState<AudioNode[] | undefined>();
-  const [primaryBpm, setPrimaryBpm] = useState<number | undefined>(undefined);
+  const [primaryBpm, setPrimaryBpm] = useState<number>(135);
   const [bpmOne, setBpmOne] = useState<undefined | number>(undefined);
   const [bpmTwo, setBpmTwo] = useState<undefined | number>(undefined);
   const [playerFileOne, setPlayerFileOne] = useState<File>();
@@ -43,6 +42,8 @@ function App() {
   const [togglePlayerTwo, setTogglePlayerTwo] = useState(0);
   const [togglePLayerOneClose, setTogglePlayerOneClose] = useState(0);
   const [togglePLayerTwoClose, setTogglePlayerTwoClose] = useState(0);
+  const [playbackSpeedOne, setPlaybackSpeedOne] = useState(1);
+  const [playbackSpeedTwo, setPlaybackSpeedTwo] = useState(1);
 
   function handlePlayerOneSongEnd() {
     setTogglePlayerOneClose(togglePLayerOneClose + 1);
@@ -89,15 +90,27 @@ function App() {
     }
   };
 
+  const getRelativePlaybackSpeed = (
+    referenceBpm: number,
+    adjustableBpm: number,
+  ) => referenceBpm / adjustableBpm;
+
   useEffect(() => {
-    if (!bpmOne && !bpmTwo) {
-      setPrimaryBpm(undefined);
-    }
     if ((!onePlaying && !twoPlaying) && (!bpmOne !== !bpmTwo)) {
       if (bpmOne) {
         setPrimaryBpm(bpmOne);
-      } else {
+        setPlaybackSpeedOne(1);
+      } else if (bpmTwo) {
         setPrimaryBpm(bpmTwo);
+        setPlaybackSpeedTwo(1);
+      }
+    }
+    if (primaryBpm) {
+      if (bpmOne) {
+        setPlaybackSpeedOne(getRelativePlaybackSpeed(primaryBpm, bpmOne));
+      }
+      if (bpmTwo) {
+        setPlaybackSpeedTwo(getRelativePlaybackSpeed(primaryBpm, bpmTwo));
       }
     }
   }, [primaryBpm, bpmOne, bpmTwo]);
@@ -146,10 +159,27 @@ function App() {
               />
             </div>
           </div>
-          <div className="flex text-gray-500 py-3 place-content-center">
-            <div className="grid grid-cols-3 w-2/3">
+          <div className="flex text-gray-500 pb-3 pt-4 place-content-center">
+            <div className="grid grid-cols-5 w-2/3">
               <p className="pt-1">{bpmOne && `Bpm: ${bpmOne}`}</p>
-              <Button color="secondary">{`BPM ${primaryBpm}`}</Button>
+              <div className="flex flex-row col-span-3">
+                <p className="pt-1 px-3">90</p>
+                <div className="grow">
+                  <Slider
+                    color="secondary"
+                    value={primaryBpm}
+                    min={90}
+                    max={180}
+                    step={1}
+                    onChange={(e, value) => {
+                      if (typeof value === 'number') {
+                        setPrimaryBpm(value);
+                      }
+                    }}
+                  />
+                </div>
+                <p className="pt-1 px-3">180</p>
+              </div>
               <p className="pt-1 justify-self-end">{bpmTwo && `Bpm: ${bpmTwo}`}</p>
             </div>
           </div>
@@ -168,6 +198,7 @@ function App() {
                 setBpmOne(bpm);
               }}
               isTop
+              playbackSpeed={playbackSpeedOne}
             />
           </div>
           <div className="h-40 bg-gray-900">
@@ -185,6 +216,7 @@ function App() {
                 setBpmTwo(bpm);
               }}
               isTop={false}
+              playbackSpeed={playbackSpeedTwo}
             />
           </div>
         </div>
