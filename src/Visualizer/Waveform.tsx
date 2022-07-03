@@ -3,6 +3,11 @@ import WaveSurfer from 'wavesurfer.js';
 import MarkersPlugin, { MarkerParams } from 'wavesurfer.js/src/plugin/markers';
 import detect, { getIntervals, getPeaks } from './BPMDetective';
 
+export interface ToggleParams{
+  toggle: number,
+  time: number | undefined
+}
+
 interface WaveformProps{
   audioContext: AudioContext;
   file: File | undefined;
@@ -10,7 +15,9 @@ interface WaveformProps{
   handleSongEnd: any;
   play: any;
   setBpm: any;
-  toggle: number;
+  toggle: ToggleParams;
+  toggleRetrieve: number;
+  toggleOtherPlayer: any;
   close: number;
   color: string;
   isTop: boolean;
@@ -18,24 +25,54 @@ interface WaveformProps{
 }
 
 function Waveform({
-  audioNodes, setBpm, isTop, toggle, close, audioContext,
-  play, file, handleSongEnd, color, playbackSpeed,
+  audioNodes, setBpm, isTop, toggle, toggleRetrieve, close, audioContext,
+  play, file, handleSongEnd, color, playbackSpeed, toggleOtherPlayer,
 }: WaveformProps) {
   const waveformRef = useRef<any>();
   const wavesurfer = useRef<WaveSurfer>();
+  const positions = useRef<Array<number>>();
+  const destroyed = useRef(true);
+
+  useEffect(() => {
+    if (!destroyed.current && wavesurfer.current
+        && positions.current && wavesurfer.current.isPlaying()) {
+      const currentTime = wavesurfer.current.getCurrentTime();
+      let closestTime = Infinity;
+      positions.current.forEach((position) => {
+        const distance = currentTime - position;
+        if ((Math.abs(distance) < closestTime) && distance >= 0) closestTime = distance;
+      });
+      const timeDistance = closestTime / wavesurfer.current.getPlaybackRate();
+      toggleOtherPlayer({ toggle: Math.random(), time: timeDistance });
+    } else {
+      toggleOtherPlayer({ toggle: Math.random(), time: undefined });
+    }
+  }, [toggleRetrieve]);
+
+  useEffect(() => {
+    if (wavesurfer.current && positions.current
+        && toggle.time && !wavesurfer.current.isPlaying()) {
+      const currentTime = wavesurfer.current.getCurrentTime();
+      let closestBeat = Infinity;
+      positions.current.forEach((position) => {
+        const distance = currentTime - position;
+        if (Math.abs(distance) < closestBeat) closestBeat = position;
+      });
+      const playTime = closestBeat + (toggle.time * wavesurfer.current.getPlaybackRate());
+      wavesurfer.current.setCurrentTime(playTime);
+    }
+    wavesurfer.current?.playPause();
+  }, [toggle]);
 
   useEffect(() => {
     wavesurfer.current?.setPlaybackRate(playbackSpeed);
   }, [playbackSpeed]);
 
   useEffect(() => {
-    wavesurfer.current?.playPause();
-  }, [toggle]);
-
-  useEffect(() => {
     play(false);
     wavesurfer.current?.destroy();
     setBpm(undefined);
+    destroyed.current = true;
   }, [close]);
 
   useEffect(() => {
@@ -63,17 +100,17 @@ function Waveform({
           const markerPositions = isTop ? 'bottom' : 'top';
 
           const markers: MarkerParams[] = [];
-          const positions: number[] = [];
+          positions.current = [];
           for (let position = firstPos; position < data.duration; position += BeatInterval) {
-            positions.push(position);
+            positions.current.push(position);
           }
           for (let position = firstPos - BeatInterval; position > 0; position -= BeatInterval) {
-            positions.push(position);
+            positions.current.push(position);
           }
-          positions.forEach((position) => {
+          positions.current.forEach((position) => {
             markers.push({
               time: position,
-              color: 'rgba(31,40,55,0.5)',
+              color: 'rgba(31,40,55,0.9)',
               position: markerPositions,
             });
           });
@@ -114,7 +151,9 @@ function Waveform({
           });
           wavesurfer.current.on('finish', () => {
             handleSongEnd();
+            destroyed.current = true;
           });
+          destroyed.current = false;
         });
       }
     }

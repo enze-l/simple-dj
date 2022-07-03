@@ -6,7 +6,7 @@ import { grey } from '@mui/material/colors';
 import { Close } from '@mui/icons-material';
 import SoundControl from './SoundControl';
 import SongListItem from './SongListItem';
-import Waveform from './Visualizer/Waveform';
+import Waveform, { ToggleParams } from './Visualizer/Waveform';
 import getRandomColor from './Visualizer/RandomColor';
 
 const theme = createTheme({
@@ -38,8 +38,14 @@ function App() {
   const [audioContext] = useState(new AudioContext());
   const [onePlaying, setOnePlaying] = useState(false);
   const [twoPlaying, setTwoPlaying] = useState(false);
-  const [togglePlayerOne, setTogglePlayerOne] = useState(0);
-  const [togglePlayerTwo, setTogglePlayerTwo] = useState(0);
+  const [togglePlayerOne, setTogglePlayerOne] = useState<ToggleParams>(
+    { toggle: 0, time: undefined },
+  );
+  const [togglePlayerTwo, setTogglePlayerTwo] = useState<ToggleParams>(
+    { toggle: 0, time: undefined },
+  );
+  const [toggleRetrievePlayerOne, setToggleRetrievePlayerOne] = useState(0);
+  const [toggleRetrievePlayerTwo, setToggleRetrievePlayerTwo] = useState(0);
   const [togglePLayerOneClose, setTogglePlayerOneClose] = useState(0);
   const [togglePLayerTwoClose, setTogglePlayerTwoClose] = useState(0);
   const [playbackSpeedOne, setPlaybackSpeedOne] = useState(1);
@@ -126,7 +132,7 @@ function App() {
               volume={2 - volume}
               playing={onePlaying}
               file={playerFileOne}
-              togglePlay={() => setTogglePlayerOne(togglePlayerOne + 1)}
+              togglePlay={() => setToggleRetrievePlayerTwo(toggleRetrievePlayerTwo + 1)}
               handlePlayerClose={() => handlePlayerOneSongEnd()}
               color={colorPlayerOne}
             />
@@ -136,7 +142,7 @@ function App() {
               volume={volume}
               playing={twoPlaying}
               file={playerFileTwo}
-              togglePlay={() => setTogglePlayerTwo(togglePlayerTwo + 1)}
+              togglePlay={() => setToggleRetrievePlayerOne(toggleRetrievePlayerOne + 1)}
               handlePlayerClose={() => handlePlayerTwoSongEnd()}
               color={colorPlayerTwo}
             />
@@ -170,6 +176,7 @@ function App() {
                     value={primaryBpm}
                     min={90}
                     max={180}
+                    valueLabelDisplay="auto"
                     step={1}
                     onChange={(e, value) => {
                       if (typeof value === 'number') {
@@ -185,7 +192,6 @@ function App() {
           </div>
           <div className="h-40 bg-gray-900">
             <Waveform
-              toggle={togglePlayerOne}
               audioContext={audioContext}
               audioNodes={audioNodesOne}
               play={(state: boolean) => setOnePlaying(state)}
@@ -199,11 +205,15 @@ function App() {
               }}
               isTop
               playbackSpeed={playbackSpeedOne}
+              toggleRetrieve={toggleRetrievePlayerOne}
+              toggleOtherPlayer={(toggle: ToggleParams) => {
+                setTogglePlayerTwo(toggle);
+              }}
+              toggle={togglePlayerOne}
             />
           </div>
           <div className="h-40 bg-gray-900">
             <Waveform
-              toggle={togglePlayerTwo}
               audioContext={audioContext}
               audioNodes={audioNodesTwo}
               play={(state: boolean) => setTwoPlaying(state)}
@@ -217,6 +227,11 @@ function App() {
               }}
               isTop={false}
               playbackSpeed={playbackSpeedTwo}
+              toggleRetrieve={toggleRetrievePlayerTwo}
+              toggleOtherPlayer={(toggle: ToggleParams) => {
+                setTogglePlayerOne(toggle);
+              }}
+              toggle={togglePlayerTwo}
             />
           </div>
         </div>
