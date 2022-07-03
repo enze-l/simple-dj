@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/simple-dj/static/css/main.79b8d5c6.css",
+    "main.js": "/simple-dj/static/js/main.8cfe1899.js",
+    "index.html": "/simple-dj/index.html",
+    "main.79b8d5c6.css.map": "/simple-dj/static/css/main.79b8d5c6.css.map",
+    "main.8cfe1899.js.map": "/simple-dj/static/js/main.8cfe1899.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.79b8d5c6.css",
+    "static/js/main.8cfe1899.js"
+  ]
+}
