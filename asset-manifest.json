@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/simple-dj/static/css/main.79b8d5c6.css",
-    "main.js": "/simple-dj/static/js/main.336ffb15.js",
+    "main.js": "/simple-dj/static/js/main.394fe06d.js",
     "index.html": "/simple-dj/index.html",
     "main.79b8d5c6.css.map": "/simple-dj/static/css/main.79b8d5c6.css.map",
-    "main.336ffb15.js.map": "/simple-dj/static/js/main.336ffb15.js.map"
+    "main.394fe06d.js.map": "/simple-dj/static/js/main.394fe06d.js.map"
   },
   "entrypoints": [
     "static/css/main.79b8d5c6.css",
-    "static/js/main.336ffb15.js"
+    "static/js/main.394fe06d.js"
   ]
 }
