@@ -1,3 +1,9 @@
+/**
+ * formates the provided Filename to a length of 40 characters.
+ * If the name is longer then 40 symbols, "..." is added to signal
+ * character have been cut off
+ * @param fileName the name that should be formatted
+ */
 function formate(fileName: string | undefined) {
   const maxLength = 40;
   let name;

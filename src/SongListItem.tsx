@@ -5,6 +5,10 @@ export interface AudioPlayerProps {
     file: File | undefined;
 }
 
+/**
+ * Used to display Song-Items
+ * @param file the file represented by this Item
+ */
 function SongListItem({ file }: AudioPlayerProps) {
   const name = formate(file?.name);
 

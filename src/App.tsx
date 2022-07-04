@@ -4,12 +4,15 @@ import {
 import React, { useEffect, useState } from 'react';
 import { grey } from '@mui/material/colors';
 import { Close } from '@mui/icons-material';
-import SoundControl from './SoundControl';
+import AudioPlayer from './AudioPlayer';
 import SongListItem from './SongListItem';
 import WavePlayer, { ToggleParams } from './Visualizer/WavePlayer';
 import getRandomColor from './Visualizer/RandomColor';
 import PlayingState from './PlayingState';
 
+/**
+ * Color Definitions used for styling MUI-Sliders
+ */
 const theme = createTheme({
   palette: {
     primary: {
@@ -24,34 +27,52 @@ const theme = createTheme({
   },
 });
 
+/**
+ *  Primary entrypoint for the Application
+ */
 function App() {
-  const [files, setFiles] = useState<Array<File | undefined>>([]);
+  // AudioNodes (EQ, Volume) for the audio players
   const [audioNodesOne, setAudioNodesOne] = useState<AudioNode[] | undefined>();
   const [audioNodesTwo, setAudioNodesTwo] = useState<AudioNode[] | undefined>();
+  // Primary BPM used for the playback-speed
   const [primaryBpm, setPrimaryBpm] = useState<number>(136);
+  // BPM for each of the audio-players
   const [bpmOne, setBpmOne] = useState<undefined | number>(undefined);
   const [bpmTwo, setBpmTwo] = useState<undefined | number>(undefined);
+  // List of uploaded files
+  const [files, setFiles] = useState<Array<File | undefined>>([]);
+  // Files loaded in both audio-players
   const [playerFileOne, setPlayerFileOne] = useState<File>();
   const [playerFileTwo, setPlayerFileTwo] = useState<File>();
+  // Color code of both players used for the background color and timeline
   const [colorPlayerOne, setColorPlayerOne] = useState<string>(getRandomColor());
   const [colorPlayerTwo, setColorPlayerTwo] = useState<string>(getRandomColor());
+  // Volume of the cross-fader
   const [volume, setVolume] = useState(1);
+  // AudioContext of the application
   const [audioContext] = useState(new AudioContext());
+  // Current playback-state of both audio-players
   const [onePlaying, setOnePlaying] = useState(PlayingState.LOADING);
   const [twoPlaying, setTwoPlaying] = useState(PlayingState.LOADING);
+  // Toggle Object for the playback of both players.
+  // The toggle value changes randomly while the time signals the offset to the closest beat
   const [togglePlayerOne, setTogglePlayerOne] = useState<ToggleParams>(
     { toggle: 0, time: undefined },
   );
   const [togglePlayerTwo, setTogglePlayerTwo] = useState<ToggleParams>(
     { toggle: 0, time: undefined },
   );
+  // Used to signal the players that they should send their current time-offset to the closest beat
   const [toggleRetrievePlayerOne, setToggleRetrievePlayerOne] = useState(0);
   const [toggleRetrievePlayerTwo, setToggleRetrievePlayerTwo] = useState(0);
+  // Used to signal the players that they should close themselves
   const [togglePLayerOneClose, setTogglePlayerOneClose] = useState(0);
   const [togglePLayerTwoClose, setTogglePlayerTwoClose] = useState(0);
+  // The playback-speed of both players
   const [playbackSpeedOne, setPlaybackSpeedOne] = useState(1);
   const [playbackSpeedTwo, setPlaybackSpeedTwo] = useState(1);
 
+  // Resets the players if a song ends
   function handlePlayerOneSongEnd() {
     setTogglePlayerOneClose(togglePLayerOneClose + 1);
     setPlayerFileOne(undefined);
@@ -63,6 +84,7 @@ function App() {
     setColorPlayerTwo(getRandomColor());
   }
 
+  // Adds new Songs to the list of uploaded ones
   const handleFileUpload = (e: any) => {
     const filesList = e.target.files;
     const array = [...files];
@@ -72,6 +94,7 @@ function App() {
     setFiles(array);
   };
 
+  // load song into an available player if possible
   const handleSongItemClicked = (index: number) => {
     const file = files[index];
     if (file) {
@@ -83,12 +106,14 @@ function App() {
     }
   };
 
+  // deletes Song from the list
   const handleSongItemClosed = (index: number) => {
     const array = [...files];
     array.splice(index, 1);
     setFiles(array);
   };
 
+  // Sets new primary Bpm
   const refreshPrimaryBpm = (bpm: number | undefined) => {
     if (bpm) {
       if (!primaryBpm) {
@@ -97,11 +122,13 @@ function App() {
     }
   };
 
+  // returns dividende between two bpm
   const getRelativePlaybackSpeed = (
     referenceBpm: number,
     adjustableBpm: number,
   ) => referenceBpm / adjustableBpm;
 
+  // Triggers a reevaluation of the primary bpm if the bpm of one of the songs changes
   useEffect(() => {
     if ((onePlaying !== PlayingState.PLAYING && twoPlaying !== PlayingState.PLAYING)
         && (!bpmOne !== !bpmTwo)) {
@@ -128,7 +155,7 @@ function App() {
       <div className="flex bg-gray-800 divide-x divide-gray-600">
         <div className="grow h-screen flex flex-col divide-y divide-gray-600">
           <div className="grow grid grid-cols-2 items-center">
-            <SoundControl
+            <AudioPlayer
               audioContext={audioContext}
               setAudioNodes={(node: AudioNode[]) => setAudioNodesOne(node)}
               volume={2 - volume}
@@ -138,7 +165,7 @@ function App() {
               handlePlayerClose={() => handlePlayerOneSongEnd()}
               color={colorPlayerOne}
             />
-            <SoundControl
+            <AudioPlayer
               audioContext={audioContext}
               setAudioNodes={(node: AudioNode[]) => setAudioNodesTwo(node)}
               volume={volume}

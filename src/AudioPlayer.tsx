@@ -20,7 +20,19 @@ export interface AudioPlayerProps {
     color: string,
 }
 
-function SoundControl({
+/**
+ * Represents on of the two decks displaying the
+ * title and offering control over the EQ and play/pause
+ * @param setAudioNodes callback function to set the necessary EQ- and Volume nodes
+ * @param file the file played back by this instance
+ * @param togglePlay callback function to trigger play/pause of the audio file
+ * @param handlePlayerClose callback function triggered by pressing "close" on this player
+ * @param audioContext the audio context needed to play back audio
+ * @param volume the volume level at which this player should output sound
+ * @param playing the state of the playback (Playing, PAUSED, LOADING)
+ * @param color the primary color of the background-visualization
+ */
+function AudioPlayer({
   setAudioNodes, file, togglePlay, handlePlayerClose, audioContext, volume, playing, color,
 }: AudioPlayerProps) {
   const [playButton, setPlayButton] = useState(<PlayArrow />);
@@ -102,4 +114,4 @@ function SoundControl({
   );
 }
 
-export default SoundControl;
+export default AudioPlayer;

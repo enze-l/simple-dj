@@ -25,6 +25,25 @@ interface WaveformProps{
   playbackSpeed: number;
 }
 
+/**
+ * Displays an audio file with its detected beats in an interactive time-graph
+ * @param audioNodes the nodes making up the audio stream
+ * @param setBpm callback function to send out its own bpm
+ * @param isTop boolean signaling if it is the upper one of both graphs
+ * @param toggle toggles the playback of the audio
+ * @param toggleRetrieve toggles the retrieval of necessary
+ * information to synchronize both audio players
+ * @param close signal if the player should be closed
+ * @param audioContext the context in which the audio is played back
+ * @param play callback to set the playing state
+ * @param file the file that has to be analyzed
+ * @param handleSongEnd callback to handle the end of a song
+ * @param color the primary color used for colour coding the graph
+ * @param playbackSpeed the playback speed of the song
+ * @param toggleOtherPlayer callback to get the information necessary
+ * to synchronize both audio players
+ * @constructor
+ */
 function WavePlayer({
   audioNodes, setBpm, isTop, toggle, toggleRetrieve, close, audioContext,
   play, file, handleSongEnd, color, playbackSpeed, toggleOtherPlayer,
@@ -34,6 +53,7 @@ function WavePlayer({
   const positions = useRef<Array<number>>();
   const destroyed = useRef(true);
 
+  // gets the interval to the next beat if toggled
   useEffect(() => {
     if (!destroyed.current && wavesurfer.current
         && positions.current && wavesurfer.current.isPlaying()) {
@@ -50,6 +70,7 @@ function WavePlayer({
     }
   }, [toggleRetrieve]);
 
+  // synchronizes playback if toggled
   useEffect(() => {
     if (wavesurfer.current && positions.current
         && toggle.time && !wavesurfer.current.isPlaying()) {
@@ -80,6 +101,7 @@ function WavePlayer({
     destroyed.current = true;
   }, [close]);
 
+  // loads new file
   useEffect(() => {
     if (file) {
       if (waveformRef.current) {

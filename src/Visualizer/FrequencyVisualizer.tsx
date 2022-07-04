@@ -8,9 +8,26 @@ interface BackgroundProps{
   color: string
 }
 
+/**
+ * Used to Visualize audio by drawing four slightly different coloured circles
+ * and having the change in size depending on the level of individual frequency bands
+ * @param analyserNode the node that provides the frequency levels
+ * @param children elements that should be drawn on top of this visualization
+ * @param color the primary color used to get all three colours off.
+ * @constructor
+ */
 function FrequencyVisualizer({ analyserNode, children, color }: BackgroundProps) {
   const canvas = createRef<HTMLCanvasElement>();
 
+  /**
+   * Draws a circle
+   * @param context the context in which to draw the circle
+   * @param colorInner the inner color of the circle
+   * @param colorOuter the outer color of the circle
+   * @param x the x coordinate of the circle
+   * @param y the y coordinate of the circle
+   * @param size the size of the circle
+   */
   const drawCircle = (
     context: CanvasRenderingContext2D,
     colorInner:string,
@@ -28,6 +45,10 @@ function FrequencyVisualizer({ analyserNode, children, color }: BackgroundProps)
     }
   };
 
+  /**
+   * returns the average value of an int array
+   * @param array the array of which to make up the average
+   */
   const getAverage = (array: Uint8Array) => array.reduce((a, b) => a + b, 0) / array.length;
 
   const animationLooper = () => {
