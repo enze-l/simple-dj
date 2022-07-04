@@ -37,18 +37,14 @@ function Waveform({
     if (!destroyed.current && wavesurfer.current
         && positions.current && wavesurfer.current.isPlaying()) {
       const currentTime = wavesurfer.current.getCurrentTime();
-      console.log(`Retrieve currentTime: ${currentTime}`);
       let closestTime = Infinity;
       positions.current.forEach((position) => {
         const distance = currentTime - position;
         if ((Math.abs(distance) < closestTime) && distance >= 0) closestTime = distance;
       });
-      console.log(`Retrieve closestTime: ${closestTime}`);
       const timeDistance = closestTime / wavesurfer.current.getPlaybackRate();
-      console.log(`Retrieve timeDistance: ${timeDistance}`);
       toggleOtherPlayer({ toggle: Math.random(), time: timeDistance });
     } else {
-      console.log('Nothing to retrieve');
       toggleOtherPlayer({ toggle: Math.random(), time: undefined });
     }
   }, [toggleRetrieve]);
@@ -57,7 +53,6 @@ function Waveform({
     if (wavesurfer.current && positions.current
         && toggle.time && !wavesurfer.current.isPlaying()) {
       const currentTime = wavesurfer.current.getCurrentTime();
-      console.log(`Toggle currentTime ${currentTime}`);
       let closestBeat = 0;
       let smallestDistance = Infinity;
       positions.current.forEach((position) => {
@@ -67,9 +62,7 @@ function Waveform({
           smallestDistance = distance;
         }
       });
-      console.log(`Toggle closestBeat ${closestBeat}`);
       const playTime = closestBeat + (toggle.time * wavesurfer.current.getPlaybackRate());
-      console.log(`Toggle playtime ${playTime}`);
       wavesurfer.current.setCurrentTime(playTime);
     }
     wavesurfer.current?.playPause();
