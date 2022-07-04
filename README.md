@@ -49,3 +49,5 @@ The project was realized with react while utilizing [Typescript](https://www.typ
 The userinterface is styled with the help of [tailwindcss](https://tailwindcss.com/) to not have to write verbose css styles. The utilized Sliders an Icons are all part of [Material-UI](https://mui.com/).
 
 Audio is handled by the Web-Audio-API. The timeline-graph at the bottom of the screen utilizes [wavesurfer](https://wavesurfer-js.org/).
+
+The Beat detection is done with a modified version of [bpm-detective](https://www.npmjs.com/package/bpm-detective). The modifications were necessary for being able to display the beats in the timeline and to synchronize the songs. 
