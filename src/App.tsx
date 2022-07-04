@@ -28,7 +28,7 @@ function App() {
   const [files, setFiles] = useState<Array<File | undefined>>([]);
   const [audioNodesOne, setAudioNodesOne] = useState<AudioNode[] | undefined>();
   const [audioNodesTwo, setAudioNodesTwo] = useState<AudioNode[] | undefined>();
-  const [primaryBpm, setPrimaryBpm] = useState<number>(135);
+  const [primaryBpm, setPrimaryBpm] = useState<number>(136);
   const [bpmOne, setBpmOne] = useState<undefined | number>(undefined);
   const [bpmTwo, setBpmTwo] = useState<undefined | number>(undefined);
   const [playerFileOne, setPlayerFileOne] = useState<File>();
@@ -150,6 +150,7 @@ function App() {
             />
           </div>
           <div className="w-full flex place-content-center">
+            <p className="absolute text-gray-500">Volume</p>
             <div className="pt-4 pb-3 w-2/3">
               <Slider
                 color="secondary"
@@ -167,8 +168,9 @@ function App() {
               />
             </div>
           </div>
-          <div className="flex text-gray-500 pb-3 pt-4 place-content-center">
-            <div className="grid grid-cols-5 w-2/3">
+          <div className="flex text-gray-500 place-content-center">
+            <p className="absolute text-gray-500">BPM</p>
+            <div className="grid grid-cols-5 w-2/3 pb-3 pt-4">
               <p className="pt-1">{bpmOne && `Bpm: ${bpmOne}`}</p>
               <div className="flex flex-row col-span-3">
                 <p className="pt-1 px-3">90</p>
