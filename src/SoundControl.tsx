@@ -1,17 +1,20 @@
 import IconButton from '@mui/material/IconButton';
 import React, { useEffect, useRef, useState } from 'react';
-import { Close, Pause, PlayArrow } from '@mui/icons-material/';
+import {
+  Close, Pause, PlayArrow, HourglassEmpty,
+} from '@mui/icons-material/';
 import EqNode from './Equalizer/EqNode';
 import FrequencyVisualizer from './Visualizer/FrequencyVisualizer';
 import EQSlider from './Equalizer/EQSlider';
 import formate from './Visualizer/FileNameFormater';
+import PlayingState from './PlayingState';
 
 export interface AudioPlayerProps {
     audioContext: AudioContext | undefined;
     setAudioNodes: any;
     file: File | undefined;
     volume: number;
-    playing: boolean;
+    playing: PlayingState;
     togglePlay: any;
     handlePlayerClose: any;
     color: string,
@@ -39,10 +42,12 @@ function SoundControl({
   };
 
   useEffect(() => {
-    if (playing) {
+    if (playing === PlayingState.PLAYING) {
       setPlayButton(<Pause />);
-    } else {
+    } else if (playing === PlayingState.PAUSED) {
       setPlayButton(<PlayArrow />);
+    } else {
+      setPlayButton(<HourglassEmpty />);
     }
   }, [playing]);
 

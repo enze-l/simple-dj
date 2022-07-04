@@ -6,8 +6,9 @@ import { grey } from '@mui/material/colors';
 import { Close } from '@mui/icons-material';
 import SoundControl from './SoundControl';
 import SongListItem from './SongListItem';
-import Waveform, { ToggleParams } from './Visualizer/Waveform';
+import WavePlayer, { ToggleParams } from './Visualizer/WavePlayer';
 import getRandomColor from './Visualizer/RandomColor';
+import PlayingState from './PlayingState';
 
 const theme = createTheme({
   palette: {
@@ -36,8 +37,8 @@ function App() {
   const [colorPlayerTwo, setColorPlayerTwo] = useState<string>(getRandomColor());
   const [volume, setVolume] = useState(1);
   const [audioContext] = useState(new AudioContext());
-  const [onePlaying, setOnePlaying] = useState(false);
-  const [twoPlaying, setTwoPlaying] = useState(false);
+  const [onePlaying, setOnePlaying] = useState(PlayingState.LOADING);
+  const [twoPlaying, setTwoPlaying] = useState(PlayingState.LOADING);
   const [togglePlayerOne, setTogglePlayerOne] = useState<ToggleParams>(
     { toggle: 0, time: undefined },
   );
@@ -102,7 +103,8 @@ function App() {
   ) => referenceBpm / adjustableBpm;
 
   useEffect(() => {
-    if ((!onePlaying && !twoPlaying) && (!bpmOne !== !bpmTwo)) {
+    if ((onePlaying !== PlayingState.PLAYING && twoPlaying !== PlayingState.PLAYING)
+        && (!bpmOne !== !bpmTwo)) {
       if (bpmOne) {
         setPrimaryBpm(bpmOne);
         setPlaybackSpeedOne(1);
@@ -191,10 +193,10 @@ function App() {
             </div>
           </div>
           <div className="h-40 bg-gray-900">
-            <Waveform
+            <WavePlayer
               audioContext={audioContext}
               audioNodes={audioNodesOne}
-              play={(state: boolean) => setOnePlaying(state)}
+              play={(state: PlayingState) => setOnePlaying(state)}
               handleSongEnd={() => handlePlayerOneSongEnd()}
               file={playerFileOne}
               close={togglePLayerOneClose}
@@ -213,10 +215,10 @@ function App() {
             />
           </div>
           <div className="h-40 bg-gray-900">
-            <Waveform
+            <WavePlayer
               audioContext={audioContext}
               audioNodes={audioNodesTwo}
-              play={(state: boolean) => setTwoPlaying(state)}
+              play={(state: PlayingState) => setTwoPlaying(state)}
               handleSongEnd={() => handlePlayerTwoSongEnd()}
               file={playerFileTwo}
               close={togglePLayerTwoClose}

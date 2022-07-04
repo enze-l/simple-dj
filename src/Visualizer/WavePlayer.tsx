@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import MarkersPlugin, { MarkerParams } from 'wavesurfer.js/src/plugin/markers';
 import detect, { getIntervals, getPeaks } from './BPMDetective';
+import PlayingState from '../PlayingState';
 
 export interface ToggleParams{
   toggle: number,
@@ -24,7 +25,7 @@ interface WaveformProps{
   playbackSpeed: number;
 }
 
-function Waveform({
+function WavePlayer({
   audioNodes, setBpm, isTop, toggle, toggleRetrieve, close, audioContext,
   play, file, handleSongEnd, color, playbackSpeed, toggleOtherPlayer,
 }: WaveformProps) {
@@ -132,33 +133,38 @@ function Waveform({
             scrollParent: true,
             minPxPerSec: 100,
             barWidth: 2,
-            interact: false,
             height: 158,
-            hideScrollbar: true,
             plugins: [
               markersPlugin,
             ],
           });
+          if (wavesurfer.current) {
+            wavesurfer.current?.setBackgroundColor(color);
 
-          wavesurfer.current?.setBackgroundColor(color);
+            const audioElement = new Audio(fileURL);
 
-          const audioElement = new Audio(fileURL);
-
-          wavesurfer.current.load(audioElement);
-          if (audioNodes) {
-            wavesurfer.current?.backend.setFilters(audioNodes);
+            wavesurfer.current.load(audioElement);
+            if (audioNodes) {
+              wavesurfer.current.backend.setFilters(audioNodes);
+            }
+            wavesurfer.current.on('play', () => {
+              play(PlayingState.PLAYING);
+              wavesurfer.current?.toggleInteraction();
+            });
+            wavesurfer.current.on('pause', () => {
+              play(PlayingState.PAUSED);
+              wavesurfer.current?.toggleInteraction();
+            });
+            wavesurfer.current.on('finish', () => {
+              handleSongEnd();
+              destroyed.current = true;
+            });
+            wavesurfer.current.on('ready', () => {
+              play(PlayingState.PAUSED);
+            });
+            play(PlayingState.LOADING);
+            destroyed.current = false;
           }
-          wavesurfer.current?.on('play', () => {
-            play(true);
-          });
-          wavesurfer.current?.on('pause', () => {
-            play(false);
-          });
-          wavesurfer.current.on('finish', () => {
-            handleSongEnd();
-            destroyed.current = true;
-          });
-          destroyed.current = false;
         });
       }
     }
@@ -171,4 +177,4 @@ function Waveform({
   );
 }
 
-export default Waveform;
+export default WavePlayer;
