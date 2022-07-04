@@ -57,7 +57,7 @@ function Waveform({
       let smallestDistance = Infinity;
       positions.current.forEach((position) => {
         const distance = currentTime - position;
-        if (Math.abs(distance) < smallestDistance) {
+        if (Math.abs(distance) < Math.abs(smallestDistance)) {
           closestBeat = position;
           smallestDistance = distance;
         }
@@ -132,6 +132,7 @@ function Waveform({
             scrollParent: true,
             minPxPerSec: 100,
             barWidth: 2,
+            interact: false,
             height: 158,
             hideScrollbar: true,
             plugins: [
