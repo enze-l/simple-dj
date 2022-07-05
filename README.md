@@ -7,7 +7,8 @@ This Repository represents my project for the study subject "Audio- und Videotec
 
 ## Table of Contents
 - [Usage](#Usage)
-- [Installation](#Installation)
+- [Installation](#Installation) 
+- [Concept](#Concept)
 - [Technologies](#Technologies)
 
 ## Usage
