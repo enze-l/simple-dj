@@ -51,4 +51,4 @@ The userinterface is styled with the help of [tailwindcss](https://tailwindcss.c
 
 Audio is handled by the Web-Audio-API. The timeline-graph at the bottom of the screen utilizes [wavesurfer](https://wavesurfer-js.org/).
 
-The Beat detection is done with a modified version of [bpm-detective](https://www.npmjs.com/package/bpm-detective). The modifications were necessary for being able to display the beats in the timeline and to synchronize the songs. 
+The Beat detection is done with a modified version of [bpm-detective](https://www.npmjs.com/package/bpm-detective). The modifications were necessary for being able to display the beats in the timeline and to synchronize the songs. Since the original script only allows for bpm-detection between 80-180 bmp (typical range for dancing music) music with a higher or lower pbm is projected onto this range. That means 50bpm or 200bpm would both be displayed as 100bpm.
